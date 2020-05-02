@@ -71,12 +71,30 @@ def get_colors(image,number_of_colors,show_chart):
 
     return rgb_colors
 
+def pixelate(input_image, no_width_grids):
+    (w, h) = input_image.size[:2]
+    pixel_size = 10  # initial
+    image = input_image  # initial
+    if w % no_width_grids != 0:
+        # resize image to fit no_of_grids
+        division = math.ceil(w / no_width_grids)
+        newsize = (division * no_width_grids, input_image.size[1])
+        resized = input_image.resize(newsize)
+        image = resized
+        pixel_size = int(image.size[0] / no_width_grids)
+    else:
+        pixel_size = int(w / no_width_grids)
+        # as each grid is 3 mm and 1 cm with 15 pixel so we made pixel_size with the size of a grid
 
-def resized_image(input_image, width_cm, height_cm):
-    # 1cm equivalent 15 pixels
-    newsize = (15 * width_cm, 15 * height_cm)
-    resized = input_image.resize(newsize)
-    return (resized)
+    image = image.resize(
+        (image.size[0] // pixel_size, image.size[1] // pixel_size),
+        Image.NEAREST
+    )
+    image = image.resize(
+        (image.size[0] * pixel_size, image.size[1] * pixel_size),
+        Image.NEAREST
+    )
+    return (image)
 
 
 def pixelate(resized_image):
@@ -93,39 +111,43 @@ def pixelate(resized_image):
     return (image)
 
 
-def grided_image(pixelated_image, width_cm, height_cm):
+def grided_image(input_image, no_width_grids):
     # drawing rows and columns according to no. of stitches needed
-    pixel_size = 5  # size of  a grid
+
+    pixelated_image = pixelate(input_image, no_width_grids)
+    pixel_size = int(pixelated_image.size[0] / no_width_grids)  # size of  a grid
+    (w, h) = pixelated_image.size[:2]
     grided = np.array(pixelated_image)
     print(type(grided))
-    size_of_grid = pixel_size
+    size_of_grid_c = pixel_size
+    size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
-    print(size_of_grid)
+    # print(size_of_grid)
 
     # drawing columns
-    for i in range(int((15 * width_cm) / (pixel_size))):
-        location_of_col = location_of_col + size_of_grid
+    for i in range(int((w) / (pixel_size))):
+        location_of_col = location_of_col + size_of_grid_c
 
         start_point_col = (location_of_col, 0)
 
-        end_point_col = (location_of_col, (15 * height_cm))
+        end_point_col = (location_of_col, (h))
 
-        color = (105, 105, 105)
+        color = (0, 0, 0)
         thickness = 1
         grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
     # drawing rows
-    for i in range(int(15 * height_cm / pixel_size)):
-        location_of_row = location_of_row + size_of_grid
+    for i in range(int(h / pixel_size)):
+        location_of_row = location_of_row + size_of_grid_r
 
         start_point_row = (0, location_of_row)
 
-        end_point_row = ((15 * width_cm), location_of_row)
+        end_point_row = ((w), location_of_row)
 
-        color = (105, 105, 105)
+        color = (0, 0, 0)
         thickness = 1
         grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
-    plt.figure(figsize=(20, 20))
+    plt.figure(figsize=(30, 30))
     plt.imshow(grided)
 
 #for testing
@@ -136,7 +158,5 @@ def grided_image(pixelated_image, width_cm, height_cm):
 #plt.show()
 #get_colors(im_np, 8, True)
 #fot testing  grided
-#image_input = Image.open(r'C:\Users\Esraa\Videos\real-smile.jpg')
-#new_image = resized_image(image_input,16,21)
-#pixelated = pixelate(new_image)
-#grided_image(pixelated,16,21)
+#image_input = Image.open(r'C:\Users\Esraa\Music\OS_gui\implementation\UPLOAD_FOLDER\butter.jpg')
+#grided_image(image_input,100)
