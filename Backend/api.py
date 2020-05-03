@@ -8,6 +8,7 @@ import globals
 import run
 
 app = Flask(__name__, static_folder='static')
+app.secret_key = 'super secret'
 UPLOAD_FOLDER = './UPLOAD_FOLDER'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'PNG'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
