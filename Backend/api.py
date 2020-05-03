@@ -30,12 +30,20 @@ def manual_crop():
     return ""
 
 
-@app.route("/params")
-@app.route("/")
-def get_width_height():
-    globals.width = int(request.args['width'])
-    globals.height = int(request.args['height'])
+@app.route("/params", methods=['GET', 'POST'])
+def post_width_height():
+    if request.method == "POST":
+        # TODO:To be changed into number_of_grids_width only
+        # globals.number_of_grids_width = int(request.args['number_of_grids_width'])
+        globals.width = int(request.args['width'])
+        globals.height = int(request.args['height'])
     return ""
+
+
+# TODO:Create an api to get the width and height in cms and check it's route
+# @app.route("/params")
+def get_width_height():
+    return jsonify(width=globals.width, height=globals.height)
 
 
 def allowed_file(filename):
@@ -85,4 +93,3 @@ def POST_file():
 if __name__ == '__main__':
     globals.initialize()
     app.run(debug=True)
-
