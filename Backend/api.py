@@ -1,17 +1,41 @@
 from flask import Flask, jsonify, request, send_from_directory, redirect, flash, url_for
-from flask_restful import Resource, Api
 from werkzeug.utils import secure_filename
 import numpy as np
 import cv2
 import io
 import os
+import globals
+import run
 
 app = Flask(__name__, static_folder='static')
 UPLOAD_FOLDER = './UPLOAD_FOLDER'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'PNG'}
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'PNG'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-global img
+globals.app = app
+
+
+@app.route("/automatic_crop")
+def crop_by_obj_detection():
+    globals.obj_flag = True
+    globals.label = request.args['label']
+    run.init_app()
+    return ""
+
+
+@app.route("/manual_crop")
+def manual_crop():
+    globals.obj_flag = False
+    run.init_app()
+    return ""
+
+
+@app.route("/params")
+@app.route("/")
+def get_width_height():
+    globals.width = int(request.args['width'])
+    globals.height = int(request.args['height'])
+    return ""
 
 
 def allowed_file(filename):
@@ -20,6 +44,8 @@ def allowed_file(filename):
 
 
 @app.route('/<path:filename>')
+@app.route("/automatic_crop/<path:filename>")
+@app.route("/manual_crop/<path:filename>")
 def send_file(filename):
     return send_from_directory(app.static_folder, filename)
 
@@ -30,31 +56,33 @@ def uploaded_file(filename):
 
 
 @app.route('/', methods=['GET', 'POST'])
-def receive_file():
-    global img
+def POST_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'photo' not in request.files:
-            flash('No file part')
+            flash('No image is sent')
             return redirect(request.url)
         # Here is the code to convert the post request to an OpenCV object
         if 'photo' in request.files:
-            photo = request.files['photo']
-            if photo.filename == '':
-                flash('No selected file')
+            globals.photo = request.files['photo']
+            if globals.photo.filename == '':
+                flash('No selected image')
                 return redirect(request.url)
-            if photo and allowed_file(photo.filename):
-                photo_name = secure_filename(photo.filename)
+            if globals.photo and allowed_file(globals.photo.filename):
+                photo_name = secure_filename(globals.photo.filename)
             # in_memory_file = io.BytesIO()
             # photo.save(in_memory_file)
             # data = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
             # color_image_flag = 1
             # img = cv2.imdecode(data, color_image_flag)
-            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], photo.filename))
+            globals.photo.save(os.path.join(app.config['UPLOAD_FOLDER'], globals.photo.filename))
             # return img
             return redirect(url_for('uploaded_file', filename=photo_name))
+
     return ""
 
 
 if __name__ == '__main__':
+    globals.initialize()
     app.run(debug=True)
+
