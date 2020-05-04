@@ -21,14 +21,14 @@ def crop_by_obj_detection():
     globals.obj_flag = True
     globals.label = request.args['label']
     run.init_app()
-    return ""
+    return jsonify(message="")
 
 
 @app.route("/manual_crop")
 def manual_crop():
     globals.obj_flag = False
     run.init_app()
-    return ""
+    return jsonify(message="")
 
 
 @app.route("/params", methods=['GET', 'POST'])
@@ -38,7 +38,7 @@ def post_width_height():
         # globals.number_of_grids_width = int(request.args['number_of_grids_width'])
         globals.width = int(request.args['width'])
         globals.height = int(request.args['height'])
-    return ""
+    return jsonify(message="")
 
 
 # TODO:Create an api to get the width and height in cms and check it's route
@@ -79,16 +79,16 @@ def POST_file():
                 return redirect(request.url)
             if globals.photo and allowed_file(globals.photo.filename):
                 photo_name = secure_filename(globals.photo.filename)
-            # in_memory_file = io.BytesIO()
-            # photo.save(in_memory_file)
-            # data = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
-            # color_image_flag = 1
-            # img = cv2.imdecode(data, color_image_flag)
-            globals.photo.save(os.path.join(app.config['UPLOAD_FOLDER'], globals.photo.filename))
-            # return img
-            return redirect(url_for('uploaded_file', filename=photo_name))
+                # in_memory_file = io.BytesIO()
+                # photo.save(in_memory_file)
+                # data = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
+                # color_image_flag = 1
+                # img = cv2.imdecode(data, color_image_flag)
+                globals.photo.save(os.path.join(app.config['UPLOAD_FOLDER'], globals.photo.filename))
+                # return img
+                return redirect(url_for('uploaded_file', filename=photo_name))
 
-    return ""
+    return jsonify(message="")
 
 
 if __name__ == '__main__':
