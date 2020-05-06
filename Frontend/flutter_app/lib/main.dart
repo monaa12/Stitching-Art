@@ -1,13 +1,20 @@
-//import 'dart:js';
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:flutterapp/pages/out_put.dart';
+//for images
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+//needed .dart files
+import'num_stitches.dart';
+import 'API.dart';
 
 void main() => runApp(MaterialApp(
 
-  home:Home(),
+ // home:Home(),
+  initialRoute:'/',
+  routes: {'/':(context)=>Home(),
+    '/params':(context)=>output(),
+    '/automatic_crop':(context)=>Home(),
+    '/gridded':(context)=>output()},
 ));
 class Home extends StatefulWidget {
   @override
@@ -17,15 +24,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   File _selectedFile;
-  _openGallery(BuildContext context)async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  getImage(ImageSource source) async{
+    var image = await ImagePicker.pickImage(source:source);
     setState(() => _selectedFile = image);
-    Navigator.of(context).pop();
-  }
-  _openCamera(BuildContext context)async{
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() => _selectedFile = image);
-    Navigator.of(context).pop();
   }
   void _showOptions(BuildContext context) {
     showModalBottomSheet(
@@ -35,13 +36,17 @@ class _HomeState extends State<Home> {
               height: 150,
               child: Column(children: <Widget>[
                 ListTile(
-                    onTap: (){_openCamera(context);},
+                    onTap: (){getImage(ImageSource.camera);
+                    Navigator.of(context).pop();
+                    },
                     leading: Icon(Icons.photo_camera),
                     title: Text("Take a photo using camera")
                 ),
                 ListTile(
                     leading: Icon(Icons.photo_library),
-                    onTap: (){_openGallery(context);} ,
+                    onTap: (){getImage(ImageSource.gallery);
+                    Navigator.of(context).pop();
+                    } ,
                     title: Text("Choose from photo library")
                 )
               ])
@@ -95,7 +100,9 @@ class _HomeState extends State<Home> {
                     fontSize: 17,
                   ),
                 ),
-                onTap: (){cropImage(_selectedFile);},
+                onTap: (){cropImage(_selectedFile);
+                Navigator.of(context).pop();
+                },
               )
             ],
           ),
@@ -111,6 +118,9 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () {
               Navigator.of(context).pop();
+              Navigator.pushNamed(context, '/automatic_crop');
+              uploadLabel(object);
+              print(object);
             },
           )
         ],
@@ -202,6 +212,7 @@ class _HomeState extends State<Home> {
                     child: Icon(
                         Icons.crop
                     ),
+                    heroTag: null,
                     onPressed: () {
                       _showChoiceDialog(context);
                     }
@@ -215,6 +226,7 @@ class _HomeState extends State<Home> {
                     child: Icon(
                         Icons.add_a_photo
                     ),
+                    heroTag: null,
                     onPressed: () {
                       _showOptions(context);
                     }),
@@ -325,7 +337,12 @@ class _HomeState extends State<Home> {
       ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //Navigator.pushNamed(context, '/output');
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => output()));
+          Navigator.pushNamed(context, '/params');
+          uploadFile(_selectedFile);
+          //uploadText(result);
+          // Navigator.pushNamed(context, '/automatic_crop');
+          //uploadLabel(object);
         },
         child: Icon(
             Icons.done
