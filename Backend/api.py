@@ -16,14 +16,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 globals.app = app
 
 
-@app.route("/automatic_crop")
+@app.route("/automatic_crop", methods=['GET', 'POST'])
 def crop_by_obj_detection():
-    globals.obj_flag = True
-    globals.label = request.args['label']
-    run.init_app()
-    return jsonify(message="")
+    if request.method == "POST":
+        globals.obj_flag = True
+        content = request.json
+        globals.label = content['label']
+        return jsonify(message="Crop by object detection is activated")
+    return jsonify(message="Not a post request on object detection")
 
 
+# Not used
 @app.route("/manual_crop")
 def manual_crop():
     globals.obj_flag = False
@@ -35,14 +38,16 @@ def manual_crop():
 def post_width_height():
     if request.method == "POST":
         # TODO:To be changed into number_of_grids_width only
-        # globals.number_of_grids_width = int(request.args['number_of_grids_width'])
-        globals.width = int(request.args['width'])
-        globals.height = int(request.args['height'])
-    return jsonify(message="")
+        dim = request.json
+        globals.width = dim['width']
+        globals.height = dim['height']
+        run.init_app()
+        return jsonify(message="width in server side=" + str(globals.width))
+    return jsonify(message="Not a post request on posting width and height")
 
 
 # TODO:Create an api to get the width and height in cms and check it's route
-# @app.route("/params")
+@app.route("/params")
 def get_width_height():
     return jsonify(width=globals.width, height=globals.height)
 
@@ -52,13 +57,15 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/<path:filename>')
-@app.route("/automatic_crop/<path:filename>")
-@app.route("/manual_crop/<path:filename>")
-def send_file(filename):
+# @app.route('/<path:filename>')
+# @app.route("/automatic_crop/<path:filename>")
+@app.route('/grided')
+def send_file():
+    filename = "grided.png"
     return send_from_directory(app.static_folder, filename)
 
 
+# Not used
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -70,13 +77,13 @@ def POST_file():
         # check if the post request has the file part
         if 'photo' not in request.files:
             flash('No image is sent')
-            return redirect(request.url)
+            return jsonify(message="No image is sent")
         # Here is the code to convert the post request to an OpenCV object
         if 'photo' in request.files:
             globals.photo = request.files['photo']
             if globals.photo.filename == '':
                 flash('No selected image')
-                return redirect(request.url)
+                return jsonify(message="No selected image")
             if globals.photo and allowed_file(globals.photo.filename):
                 photo_name = secure_filename(globals.photo.filename)
                 # in_memory_file = io.BytesIO()
@@ -86,11 +93,12 @@ def POST_file():
                 # img = cv2.imdecode(data, color_image_flag)
                 globals.photo.save(os.path.join(app.config['UPLOAD_FOLDER'], globals.photo.filename))
                 # return img
-                return redirect(url_for('uploaded_file', filename=photo_name))
+                # return redirect(url_for('uploaded_file', filename=photo_name))
+                return jsonify(message="Successfully uploaded" + globals.photo.filename)
 
-    return jsonify(message="")
+    return jsonify(message="Not a POST request")
 
 
 if __name__ == '__main__':
     globals.initialize()
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)
