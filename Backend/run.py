@@ -121,13 +121,6 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     return rgb_colors
 
 
-def resized_image(input_image, width_cm, height_cm):
-    # 1cm equivalent 15 pixels
-    newsize = (15 * width_cm, 15 * height_cm)
-    resized = input_image.resize(newsize)
-    return (resized)
-
-
 def pixelate(input_image, no_width_grids):
     (w, h) = input_image.size[:2]
     pixel_size = 10  # initial
@@ -283,3 +276,5 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
 # dmc_df = conversion_dmc(json_file_path)
 # im_np = cv2.imread('D:/4th year computer/SECOND TERM/image processing/project/butter.jpg')
 # get_colors(im_np, 8, True, dmc_df)
+#image_input = Image.open(r'C:\Users\Esraa\Music\OS_gui\implementation\UPLOAD_FOLDER\minion.jpg')
+#grided_image(image_input,70)
