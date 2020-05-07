@@ -196,7 +196,8 @@ def init_app():
         grided_image(pixelated, 16, 21)
 
     else:
-        im_np = cv2.imread(image_path)
+        im_np = get_image(image_path)
+        # im_np = cv2.imread(image_path)
         get_colors(im_np, 8, True, dmc_df)
         # fot testing  gridded
         image_input = Image.open(image_path)
