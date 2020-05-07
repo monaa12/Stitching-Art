@@ -23,7 +23,7 @@ def crop_by_obj_detection():
         content = request.json
         globals.label = content['label']
         return jsonify(message="Crop by object detection is activated")
-    return jsonify(message="Not a post request on object detection")
+    return jsonify(message="Not a post/get request on object detection")
 
 
 # Not used
@@ -37,17 +37,20 @@ def manual_crop():
 @app.route("/params", methods=['GET', 'POST'])
 def post_width_height():
     if request.method == "POST":
-        # TODO:To be changed into number_of_grids_width only
+        # TODO:To be changed into width-->no_width_grids and height--> number_of_colors
         dim = request.json
-        globals.width = dim['width']
-        globals.height = dim['height']
+        globals.no_width_grids = dim['width']
+        globals.number_of_colors = dim['height']
         run.init_app()
-        return jsonify(message="width in server side=" + str(globals.width))
-    return jsonify(message="Not a post request on posting width and height")
+        return jsonify(message="no_width_grids in server side=" + str(globals.no_width_grids))
+    else:
+        return jsonify(width=globals.width, height=globals.height)
+    return jsonify(message="Not a post request on posting no_width_grids")
 
 
 # TODO:Create an api to get the width and height in cms and check it's route
-@app.route("/params")
+# TODO: integrate it with post function
+# @app.route("/params")
 def get_width_height():
     return jsonify(width=globals.width, height=globals.height)
 

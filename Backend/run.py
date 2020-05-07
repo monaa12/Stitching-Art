@@ -109,7 +109,6 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     ####################
 
     if show_chart:
-
         plt.figure(figsize=(8, 6))
         plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
         plt.savefig(os.path.join(globals.app.static_folder, "pie_chart.png"))
@@ -164,36 +163,38 @@ def grided_image(input_image, no_width_grids):
     size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
-    #######here the height and width calculationsss
-    #getting size of etamin in cm
-    globals.width = int((w)/(pixel_size)) / 3 # 3 is no. of grids in 1 cm
-    globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
+    # here the height and width calculations
+    # getting size of etamin in cm
+    globals.width = int(w / pixel_size) / 3  # 3 is no. of grids in 1 cm
+    globals.height = int(h / pixel_size) / 3  # 3 is no. of grids in 1 cm
     ################
     # drawing columns
-for i in range(int((w) / (pixel_size))):
-    location_of_col = location_of_col + size_of_grid_c
 
-    start_point_col = (location_of_col, 0)
+    for i in range(int(w / pixel_size)):
+        location_of_col = location_of_col + size_of_grid_c
 
-    end_point_col = (location_of_col, (h))
+        start_point_col = (location_of_col, 0)
 
-    color = (0, 0, 0)
-    thickness = 1
-    grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
-    # drawing rows
-for i in range(int(h / pixel_size)):
-    location_of_row = location_of_row + size_of_grid_r
+        end_point_col = (location_of_col, h)
 
-    start_point_row = (0, location_of_row)
+        color = (0, 0, 0)
+        thickness = 1
+        grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
+        # drawing rows
+    for i in range(int(h / pixel_size)):
+        location_of_row = location_of_row + size_of_grid_r
 
-    end_point_row = ((w), location_of_row)
+        start_point_row = (0, location_of_row)
 
-    color = (0, 0, 0)
-    thickness = 1
-    grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
-plt.figure(figsize=(30, 30))
-plt.imshow(grided)
-plt.savefig(os.path.join(globals.app.static_folder, "grided.png"))
+        end_point_row = ((w), location_of_row)
+
+        color = (0, 0, 0)
+        thickness = 1
+        grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
+
+    plt.figure(figsize=(30, 30))
+    plt.imshow(grided)
+    plt.savefig(os.path.join(globals.app.static_folder, "grided.png"))
 
 
 def init_app():
@@ -206,21 +207,21 @@ def init_app():
     if globals.obj_flag:
         im_pil, bbox, labels = object_detection(image_path)
         im_np, im_pil = crop_object(im_pil, bbox, labels, globals.label)
-        get_colors(im_np, 8, True, dmc_df)
-        new_image = resized_image(im_pil, 16, 21)
-        pixelated = pixelate(new_image)
-        grided_image(pixelated, 16, 21)
+        get_colors(im_np, globals.number_of_colors, True, dmc_df)
+        # new_image = resized_image(im_pil, 16, 21)
+        #pixelated = pixelate(im_pil)
+        grided_image(im_pil, globals.no_width_grids)
 
     else:
         im_np = get_image(image_path)
         # im_np = cv2.imread(image_path)
-        get_colors(im_np, 8, True, dmc_df)
+        get_colors(im_np, globals.number_of_colors, True, dmc_df)
         # fot testing  gridded
         image_input = Image.open(image_path)
         # new_image = resized_image(image_input, 16, 21)
-        new_image = resized_image(image_input, globals.width, globals.height)
-        pixelated = pixelate(new_image)
-        grided_image(pixelated, globals.width, globals.height)
+        # new_image = resized_image(image_input, globals.width, globals.height)
+        # pixelated = pixelate(image_input)
+        grided_image(image_input, globals.no_width_grids)
 
     return ""
 
@@ -236,9 +237,6 @@ def distanceFromColor(idx, r, g, b, dmc_df):
 
 
 def matchDMC(redVal, greenVal, blueVal, dmc_df):
-    # json_file_path = "./rgb-dmc.json"
-    # test conversion
-    # dmc_df = conversion_dmc(json_file_path)
     distance_list = []
 
     for idx in range(len(dmc_df)):
@@ -276,5 +274,5 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
 # dmc_df = conversion_dmc(json_file_path)
 # im_np = cv2.imread('D:/4th year computer/SECOND TERM/image processing/project/butter.jpg')
 # get_colors(im_np, 8, True, dmc_df)
-#image_input = Image.open(r'C:\Users\Esraa\Music\OS_gui\implementation\UPLOAD_FOLDER\minion.jpg')
-#grided_image(image_input,70)
+# image_input = Image.open(r'C:\Users\Esraa\Music\OS_gui\implementation\UPLOAD_FOLDER\minion.jpg')
+# grided_image(image_input,70)
