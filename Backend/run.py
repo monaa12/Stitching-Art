@@ -152,6 +152,11 @@ def grided_image(input_image, no_width_grids):
     size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
+    #######here the height and width calculationsss
+    #getting size of etamin in cm
+    globals.width = int((w)/(pixel_size)) / 3 # 3 is no. of grids in 1 cm
+    globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
+    ################
     # drawing columns
     for i in range(int((w) / (pixel_size))):
         location_of_col = location_of_col + size_of_grid_c
