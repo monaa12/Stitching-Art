@@ -109,9 +109,23 @@ def resized_image(input_image, width_cm, height_cm):
     return (resized)
 
 
-def pixelate(resized_image):
-    pixel_size = 5  # as each grid is 3 mm and 1 cm with 15 pixel so we made pixel_size with the size of a grid
-    image = resized_image
+def pixelate(input_image, no_width_grids):
+    (w, h) = input_image.size[:2]
+    pixel_size = 10  # initial
+    image = input_image  # initial
+    if w % no_width_grids != 0:
+        # resize image to fit no_of_grids
+        division = math.ceil(w / no_width_grids)
+        newsize = (division * no_width_grids, input_image.size[1])
+        resized = input_image.resize(newsize)
+        image = resized
+        (we, he) = image.size[:2]
+        print(we)
+        print(he)
+        pixel_size = int(image.size[0] / no_width_grids)
+    else:
+        pixel_size = int(w / no_width_grids)
+
     image = image.resize(
         (image.size[0] // pixel_size, image.size[1] // pixel_size),
         Image.NEAREST
@@ -123,40 +137,44 @@ def pixelate(resized_image):
     return (image)
 
 
-def grided_image(pixelated_image, width_cm, height_cm):
-    # drawing rows and columns according to no. of stitches needed
-    pixel_size = 5  # size of  a grid
+def grided_image(input_image, no_width_grids):
+    # this function is drawing grids according to no. of stitches needed (no_width_grids)
+
+    # first use the pixelate function to convert the input_impage into pixelated_image
+    pixelated_image = pixelate(input_image, no_width_grids)
+
+    # trying to get pixel_size
+    pixel_size = int(pixelated_image.size[0] / no_width_grids)
+    (w, h) = pixelated_image.size[:2]
     grided = np.array(pixelated_image)
     print(type(grided))
-    size_of_grid = pixel_size
+    size_of_grid_c = pixel_size
+    size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
-    print(size_of_grid)
-
     # drawing columns
-    for i in range(int((15 * width_cm) / (pixel_size))):
-        location_of_col = location_of_col + size_of_grid
+    for i in range(int((w) / (pixel_size))):
+        location_of_col = location_of_col + size_of_grid_c
 
         start_point_col = (location_of_col, 0)
 
-        end_point_col = (location_of_col, (15 * height_cm))
+        end_point_col = (location_of_col, (h))
 
-        color = (105, 105, 105)
+        color = (0, 0, 0)
         thickness = 1
         grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
-    # drawing rows
-    for i in range(int(15 * height_cm / pixel_size)):
-        location_of_row = location_of_row + size_of_grid
+        # drawing rows
+    for i in range(int(h / pixel_size)):
+        location_of_row = location_of_row + size_of_grid_r
 
         start_point_row = (0, location_of_row)
 
-        end_point_row = ((15 * width_cm), location_of_row)
+        end_point_row = ((w), location_of_row)
 
-        color = (105, 105, 105)
+        color = (0, 0, 0)
         thickness = 1
         grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
-
-    plt.figure(figsize=(20, 20))
+    plt.figure(figsize=(30, 30))
     plt.imshow(grided)
     # plt.savefig("D:/4th year computer/SECOND TERM/image processing/project/implementation/static/grided")
     plt.savefig(os.path.join(globals.app.static_folder, "grided.png"))
