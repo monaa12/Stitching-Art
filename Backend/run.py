@@ -14,12 +14,20 @@ from sklearn.cluster import KMeans
 
 import globals
 import os
+import math
 
 
 # conversion of dmc
 def conversion_dmc(json_file_path):
     df = pd.read_json(json_file_path)
     return df
+
+
+# get the image from frontend
+def get_image(image_path):
+    image = cv2.imread(image_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return image
 
 
 def object_detection(image_path):
@@ -67,7 +75,12 @@ def crop_object(im_pil, bbox, labels, gb_label):
 
 
 def RGB2HEX(color):
-    return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
+    return "#{:02x}{:02x}{:02x}".format(int(round(color[0])), int(round(color[1])), int(round(color[2])))
+
+
+def HEX2RGB(color):
+    h = color.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
 def get_colors(image, number_of_colors, show_chart, dmc_df):
@@ -80,25 +93,31 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     # We get ordered colors by iterating through the keys
     ordered_colors = [center_colors[i] for i in counts.keys()]
     hex_colors = [RGB2HEX(ordered_colors[i]) for i in counts.keys()]
-    # print(hex_colors)
-    ##################
-    # print(dmc_df["floss"][1])
-    dmc_colors = []
-    print(dmc_df.shape)
-    for i in range(len(hex_colors)):
-        for j in range(1, 454):
-            if (dmc_df["hex"][j] == (hex_colors[i].upper())):
-                dmc_colors.append(dmc_df["floss"][j])
-                print(dmc_colors)
-
-    ####################
     rgb_colors = [ordered_colors[i] for i in counts.keys()]
+    ##################
+    dmc_colors_codes = []
+    dmc_colors_hex_labels = []
+    dmc_colors_rgb = []
+    for i in range(len(hex_colors)):
+        r = int(round(rgb_colors[i][0]))
+        g = int(round(rgb_colors[i][1]))
+        b = int(round(rgb_colors[i][2]))
+        dmc_code, r, g, b, dmc_hex = matchDMC(r, g, b, dmc_df)
+        dmc_colors_codes.append(dmc_code)
+        dmc_colors_rgb.append([r, g, b])
+        dmc_colors_hex_labels.append("#" + dmc_hex.lower())
+    ####################
 
     if show_chart:
+
         plt.figure(figsize=(8, 6))
         plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
-        # plt.savefig("D:/4th year computer/SECOND TERM/image processing/project/implementation/static/pie_chart")  # save above pie chart with name pie_chart
         plt.savefig(os.path.join(globals.app.static_folder, "pie_chart.png"))
+
+        # dmc_pie_chart
+        plt.figure(figsize=(8, 6))
+        plt.pie(counts.values(), labels=dmc_colors_codes, colors=dmc_colors_hex_labels)
+        plt.savefig(os.path.join(globals.app.static_folder, "dmc_pie_chart.png"))
     return rgb_colors
 
 
@@ -158,59 +177,109 @@ def grided_image(input_image, no_width_grids):
     globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
     ################
     # drawing columns
-    for i in range(int((w) / (pixel_size))):
-        location_of_col = location_of_col + size_of_grid_c
+for i in range(int((w) / (pixel_size))):
+    location_of_col = location_of_col + size_of_grid_c
 
-        start_point_col = (location_of_col, 0)
+    start_point_col = (location_of_col, 0)
 
-        end_point_col = (location_of_col, (h))
+    end_point_col = (location_of_col, (h))
 
-        color = (0, 0, 0)
-        thickness = 1
-        grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
-        # drawing rows
-    for i in range(int(h / pixel_size)):
-        location_of_row = location_of_row + size_of_grid_r
+    color = (0, 0, 0)
+    thickness = 1
+    grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
+    # drawing rows
+for i in range(int(h / pixel_size)):
+    location_of_row = location_of_row + size_of_grid_r
 
-        start_point_row = (0, location_of_row)
+    start_point_row = (0, location_of_row)
 
-        end_point_row = ((w), location_of_row)
+    end_point_row = ((w), location_of_row)
 
-        color = (0, 0, 0)
-        thickness = 1
-        grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
-    plt.figure(figsize=(30, 30))
-    plt.imshow(grided)
-    # plt.savefig("D:/4th year computer/SECOND TERM/image processing/project/implementation/static/grided")
-    plt.savefig(os.path.join(globals.app.static_folder, "grided.png"))
+    color = (0, 0, 0)
+    thickness = 1
+    grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
+plt.figure(figsize=(30, 30))
+plt.imshow(grided)
+plt.savefig(os.path.join(globals.app.static_folder, "grided.png"))
 
 
 def init_app():
-    # for testing
-    image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
     json_file_path = "./rgb-dmc.json"
     # test conversion
     dmc_df = conversion_dmc(json_file_path)
+    # for testing
+    image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
 
     if globals.obj_flag:
         im_pil, bbox, labels = object_detection(image_path)
         im_np, im_pil = crop_object(im_pil, bbox, labels, globals.label)
-        # plt.imshow(im_np)
-        # plt.show()
         get_colors(im_np, 8, True, dmc_df)
         new_image = resized_image(im_pil, 16, 21)
         pixelated = pixelate(new_image)
         grided_image(pixelated, 16, 21)
 
     else:
-        im_np = cv2.imread(image_path)
+        im_np = get_image(image_path)
+        # im_np = cv2.imread(image_path)
         get_colors(im_np, 8, True, dmc_df)
         # fot testing  gridded
         image_input = Image.open(image_path)
         # new_image = resized_image(image_input, 16, 21)
         new_image = resized_image(image_input, globals.width, globals.height)
         pixelated = pixelate(new_image)
-        # grided = grided_image(pixelated, 16, 21)
         grided_image(pixelated, globals.width, globals.height)
 
     return ""
+
+
+def distanceFromColor(idx, r, g, b, dmc_df):
+    tr = dmc_df.loc[idx]['r']
+    tg = dmc_df.loc[idx]['g']
+    tb = dmc_df.loc[idx]['b']
+
+    base_distance = ((r - tr) * (r - tr)) + ((g - tg) * (g - tg)) + ((b - tb) * (b - tb))
+    distance = math.sqrt(base_distance)
+    return distance
+
+
+def matchDMC(redVal, greenVal, blueVal, dmc_df):
+    # json_file_path = "./rgb-dmc.json"
+    # test conversion
+    # dmc_df = conversion_dmc(json_file_path)
+    distance_list = []
+
+    for idx in range(len(dmc_df)):
+        candidate_dist = distanceFromColor(idx, redVal, greenVal, blueVal, dmc_df)
+        distance_list.insert(idx, [candidate_dist, idx])
+        # To stop looping in case the detecting color already match an existing dmc color
+        if candidate_dist == 0:
+            dmc_i = dmc_df.loc[idx]['floss']
+            dmc_r = dmc_df.loc[idx]['r']
+            dmc_g = dmc_df.loc[idx]['g']
+            dmc_b = dmc_df.loc[idx]['b']
+            hex_i = dmc_df.loc[idx]['hex']
+            return dmc_i, dmc_r, dmc_g, dmc_b, hex_i
+
+    # sort the list in ascending order
+    distance_list.sort()
+
+    # Get the values that are closest to the RGB value from first row of {distance_list} and idx column
+    # (which is the same id in data frame of dmc colors{dmc_df})
+    dmc_i = dmc_df.loc[distance_list[0][1]]['floss']
+    dmc_r = dmc_df.loc[distance_list[0][1]]['r']
+    dmc_g = dmc_df.loc[distance_list[0][1]]['g']
+    dmc_b = dmc_df.loc[distance_list[0][1]]['b']
+    hex_i = dmc_df.loc[distance_list[0][1]]['hex']
+
+    # in case we make an option to give three different alternatives for each dmc color
+    second_color = dmc_df.loc[distance_list[1][1]]['floss']
+    third_color = dmc_df.loc[distance_list[2][1]]['floss']
+    fourth_color = dmc_df.loc[distance_list[3][1]]['floss']
+
+    return dmc_i, dmc_r, dmc_g, dmc_b, hex_i
+
+# json_file_path = "./rgb-dmc.json"
+# test conversion
+# dmc_df = conversion_dmc(json_file_path)
+# im_np = cv2.imread('D:/4th year computer/SECOND TERM/image processing/project/butter.jpg')
+# get_colors(im_np, 8, True, dmc_df)
