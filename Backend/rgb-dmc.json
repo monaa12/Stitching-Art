@@ -692,15 +692,15 @@
    "hex": "A14B51",
    "row": "row 04-06"
  },
- {
-   "floss": "221",
-   "description": "Shell Pink Vy Dk",
-   "r": 136,
-   "g": 62,
-   "b": 67,
-   "hex": "8.83E+45",
-   "row": "row 04-07"
- },
+	{
+		"floss": "221",
+		"description": "Shell Pink Vy Dk",
+		"r": 136,
+		"g": 62,
+		"b": 67,
+		"hex": "792631",
+		"row": "row 04-07"
+	},
  {
    "floss": "778",
    "description": "Antique Mauve Vy Lt",
@@ -1979,15 +1979,15 @@
    "hex": "189065",
    "row": "row 10-05"
  },
- {
-   "floss": "910",
-   "description": "Emerald Green Dark",
-   "r": 24,
-   "g": 126,
-   "b": 86,
-   "hex": "1.87E+58",
-   "row": "row 10-06"
- },
+{
+	"floss": "910",
+	"description": "Emerald Green Dark",
+	"r": 24,
+	"g": 126,
+	"b": 86,
+	"hex": "10814E",
+	"row": "row 10-06"
+},
  {
    "floss": "909",
    "description": "Emerald Green Vy Dk",
@@ -2726,15 +2726,15 @@
    "hex": "A07042",
    "row": "row 13-13"
  },
- {
-   "floss": "869",
-   "description": "Hazelnut Brown V Dk",
-   "r": 131,
-   "g": 94,
-   "b": 57,
-   "hex": "8.35E+41",
-   "row": "row 13-14"
- },
+	{
+		"floss": "869",
+		"description": "Hazelnut Brown V Dk",
+		"r": 131,
+		"g": 94,
+		"b": 57,
+		"hex": "784C28",
+		"row": "row 13-14"
+	},
  {
    "floss": "728",
    "description": "Topaz",
@@ -3617,15 +3617,15 @@
    "hex": "B87748",
    "row": "row 17-12"
  },
- {
-   "floss": "434",
-   "description": "Brown Light",
-   "r": 152,
-   "g": 94,
-   "b": 51,
-   "hex": "9.85E+35",
-   "row": "row 17-13"
- },
+{
+	"floss": "434",
+	"description": "Brown Light",
+	"r": 152,
+	"g": 94,
+	"b": 51,
+	"hex": "8F5332",
+	"row": "row 17-13"
+},
  {
    "floss": "433",
    "description": "Brown Med",
