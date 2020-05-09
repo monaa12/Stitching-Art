@@ -1,18 +1,17 @@
 import 'package:path/path.dart';
 import 'package:dio/dio.dart';
 
-void uploadFile(filePath) async {
+void uploadFile(filePath) async{
   // Get base file name
   String fileName = basename(filePath.path);
   print("File base name: $fileName");
-
-  try {
-    FormData photo =
-    new FormData.from({"photo": new UploadFileInfo(filePath, fileName)});
+  try{
+    FormData photo = new FormData.fromMap({"photo" : await MultipartFile.fromFile(filePath.path,filename: fileName)});
     Response response = await Dio().post("http://10.0.2.2:5000/", data: photo);
     print("File upload response: $response");
-
-  } catch (e) {
+  }
+  catch(e)
+  {
     print("Exception Caught: $e");
   }
 }
