@@ -104,7 +104,7 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
         b = int(round(rgb_colors[i][2]))
         dmc_code, r, g, b, dmc_hex = matchDMC(r, g, b, dmc_df)
         dmc_colors_codes.append(dmc_code)
-        dmc_colors_rgb.append([r, g, b])
+        # dmc_colors_rgb.append([r, g, b])
         dmc_colors_hex_labels.append("#" + dmc_hex.lower())
     ####################
 
@@ -194,7 +194,7 @@ def grided_image(input_image, no_width_grids):
 
     plt.figure(figsize=(30, 30))
     plt.imshow(grided)
-    plt.savefig(os.path.join(globals.app.static_folder, "grided.png"))
+    plt.savefig(os.path.join(globals.app.static_folder, "gridded.png"))
 
 
 def init_app():
@@ -272,7 +272,7 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
 # json_file_path = "./rgb-dmc.json"
 # test conversion
 # dmc_df = conversion_dmc(json_file_path)
-# im_np = cv2.imread('D:/4th year computer/SECOND TERM/image processing/project/butter.jpg')
+# im_np = cv2.imread('D:/4th year computer/SECOND TERM/image processing/project/minion.jpg')
 # get_colors(im_np, 8, True, dmc_df)
 # image_input = Image.open(r'C:\Users\Esraa\Music\OS_gui\implementation\UPLOAD_FOLDER\minion.jpg')
 # grided_image(image_input,70)

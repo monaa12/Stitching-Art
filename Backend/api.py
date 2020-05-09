@@ -10,7 +10,7 @@ import run
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'super secret'
 UPLOAD_FOLDER = './UPLOAD_FOLDER'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'PNG'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'PNG'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 globals.app = app
@@ -60,18 +60,18 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# @app.route('/<path:filename>')
+@app.route('/<path:filename>')
 # @app.route("/automatic_crop/<path:filename>")
-@app.route('/grided')
-def send_file():
-    filename = "grided.png"
-    return send_from_directory(app.static_folder, filename)
+# @app.route('/gridded')
+def send_file(filename):
+    #filename = "grided.png"
+    return send_from_directory(app.static_folder, filename+".png")
 
 
 # Not used
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename+".png")
 
 
 @app.route('/', methods=['GET', 'POST'])
