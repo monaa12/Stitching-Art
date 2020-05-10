@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'API.dart';
+import 'Gridded_image.dart';
+import 'main.dart';
+
 class output extends StatefulWidget {
   @override
   _outputState createState() => _outputState();
@@ -47,14 +50,15 @@ class _outputState extends State<output> {
                 },
                 controller: textCont,
 
-              )
-              ,
+              ),
             ),
           )
         ],
       ),
       floatingActionButton:  FloatingActionButton(
         onPressed: () {
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => Gridded()));
+          Navigator.pushNamed(context, '/gridded');
           uploadStitches(res);
         },
         child: Icon(
