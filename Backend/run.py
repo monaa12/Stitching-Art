@@ -148,6 +148,15 @@ def pixelate(input_image, no_width_grids):
     return (image)
 
 
+def dimension (input_image, no_width_grids):
+    image = pixelate(input_image, no_width_grids)
+    pixel_size = int(image.size[0]/no_width_grids)
+    (w, h) = image.size[:2]
+    globals.width = int((w)/(pixel_size)) / 3 # 3 is no. of grids in 1 cm
+    globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
+    return (globals.width, globals.height)
+
+
 def grided_image(input_image, no_width_grids):
     # this function is drawing grids according to no. of stitches needed (no_width_grids)
 
@@ -163,11 +172,7 @@ def grided_image(input_image, no_width_grids):
     size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
-    # here the height and width calculations
-    # getting size of etamin in cm
-    globals.width = int(w / pixel_size) / 3  # 3 is no. of grids in 1 cm
-    globals.height = int(h / pixel_size) / 3  # 3 is no. of grids in 1 cm
-    ################
+
     # drawing columns
 
     for i in range(int(w / pixel_size)):
