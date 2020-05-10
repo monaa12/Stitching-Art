@@ -41,7 +41,7 @@ def post_width_height():
         dim = request.json
         globals.no_width_grids = dim['width']
         globals.number_of_colors = dim['height']
-        run.init_app()
+        # run.init_app()
         return jsonify(message="no_width_grids in server side=" + str(globals.no_width_grids))
     else:
         return jsonify(width=globals.width, height=globals.height)
@@ -64,7 +64,8 @@ def allowed_file(filename):
 # @app.route("/automatic_crop/<path:filename>")
 # @app.route('/gridded')
 def send_file(filename):
-    #filename = "grided.png"
+    if filename == "gridded":
+        run.init_app()
     return send_from_directory(app.static_folder, filename+".png")
 
 
