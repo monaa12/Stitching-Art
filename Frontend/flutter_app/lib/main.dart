@@ -5,25 +5,30 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 //needed .dart files
 import'num_stitches.dart';
+import 'pie_chart.dart';
+import 'Gridded_image.dart';
 import 'API.dart';
+import 'dmc_pie_chart.dart';
 
 void main() => runApp(MaterialApp(
-
- // home:Home(),
+  //home:Home(),
   initialRoute:'/',
   routes: {'/':(context)=>Home(),
     '/params':(context)=>output(),
     '/automatic_crop':(context)=>Home(),
-    '/gridded':(context)=>output()},
+    '/gridded':(context)=>Gridded(),
+    '/pie_chart':(context)=>Chart(),
+    '/dmc_pie_chart': (context)=> DMCChart(),
+  },
 ));
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 
 }
-
 class _HomeState extends State<Home> {
   File _selectedFile;
+//  final GlobalKey<ScaffoldState> _scaffoldstate =new GlobalKey<ScaffoldState>();
   getImage(ImageSource source) async{
     var image = await ImagePicker.pickImage(source:source);
     setState(() => _selectedFile = image);
@@ -101,8 +106,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 onTap: (){cropImage(_selectedFile);
-                Navigator.of(context).pop();
-                },
+                Navigator.of(context).pop();},
               )
             ],
           ),
@@ -118,9 +122,9 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.pushNamed(context, '/automatic_crop');
-              uploadLabel(object);
-              print(object);
+              // Navigator.pushNamed(context, '/automatic_crop');
+              // uploadLabel(object);
+              //uploadLabelImage(object,_selectedFile);
             },
           )
         ],
@@ -166,7 +170,7 @@ class _HomeState extends State<Home> {
       );
 
       this.setState((){
-        img = cropped;
+        _selectedFile = cropped;
         //_inProcess = false;
       });
     } else {
@@ -185,6 +189,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // key: scaffoldstate,
       appBar: AppBar(
         title:Text('Stitching Art',
           style: TextStyle(
@@ -202,6 +207,7 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children : <Widget>[
           getImageWidget(),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -215,6 +221,7 @@ class _HomeState extends State<Home> {
                     heroTag: null,
                     onPressed: () {
                       _showChoiceDialog(context);
+
                     }
                 ),
               ),
@@ -231,6 +238,7 @@ class _HomeState extends State<Home> {
                       _showOptions(context);
                     }),
               ),
+
             ],
           ),
           Padding(padding: EdgeInsets.all(10.0)),
@@ -342,7 +350,7 @@ class _HomeState extends State<Home> {
           uploadFile(_selectedFile);
           //uploadText(result);
           // Navigator.pushNamed(context, '/automatic_crop');
-          //uploadLabel(object);
+          // uploadLabel(object);
         },
         child: Icon(
             Icons.done
@@ -353,4 +361,3 @@ class _HomeState extends State<Home> {
     ) ;
   }
 }
-
