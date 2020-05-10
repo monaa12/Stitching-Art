@@ -4076,13 +4076,13 @@
    "hex": "424242",
    "row": "row 19-15"
  },
- {
-   "floss": "310",
-   "description": "Black",
-   "r": 0,
-   "g": 0,
-   "b": 0,
-   "hex": "0",
-   "row": "row 19-16"
- }
+{
+	"floss": "310",
+	"description": "Black",
+	"r": 0,
+	"g": 0,
+	"b": 0,
+	"hex": "000000",
+	"row": "row 19-16"
+}
 ]
