@@ -1,3 +1,10 @@
+<p align="center">
+
+<img  src = C:\Users\Lenovo\Desktop>
+
+</p>
+
+
 # Stitching-Art
 
 ## Content
@@ -20,9 +27,15 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ---
 
 ## Specification
-- The front-end is in [Flutter](https://flutter.dev)
+-Mobile development 
+
+-The front-end is in [Flutter](https://flutter.dev) framework.
 
 -The back-end is in [Python 3](https://www.python.org/download/releases/3.0/) using [Flask](http://flask.pocoo.org/) framework.
+
+-The Core project is developed using [OpenCV](https://opencv.org/) ,[cvlib](https://www.cvlib.net/) ,[matplotlib](https://realpython.com/python-matplotlib-guide/) ,and [pillow](ttps://python-pillow.org/).
+
+-The model used for color identification in image is [k-means](https://towardsdatascience.com/k-means-clustering-algorithm-applications-evaluation-methods-and-drawbacks-aa03e644b48a) in python. 
 
 ---
 
