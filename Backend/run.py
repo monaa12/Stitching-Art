@@ -110,7 +110,6 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     dmc_colors_rgb = []
     pie_dmc = []
     sorted_counts = list(counts.values())
-    sorted_counts.sort(reverse=True)
     for i in range(len(hex_colors)):
         r = int(round(rgb_colors[i][0]))
         g = int(round(rgb_colors[i][1]))
@@ -147,22 +146,31 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
 
 
 def pixelate(input_image, no_width_grids):
+    """Provides pixelation for image  .
+
+    Parameters
+    ---------
+    input_image: PIL image.
+
+    no_width_grids: number of stitches of the width .
+
+    """
+
     (w, h) = input_image.size[:2]
     pixel_size = 10  # initial
     image = input_image  # initial
+
     if w % no_width_grids != 0:
-        # resize image to fit no_of_grids
+        # resizing the input_image to fit no_of_grids
         division = math.ceil(w / no_width_grids)
         newsize = (division * no_width_grids, input_image.size[1])
         resized = input_image.resize(newsize)
         image = resized
-        (we, he) = image.size[:2]
-        print(we)
-        print(he)
         pixel_size = int(image.size[0] / no_width_grids)
     else:
         pixel_size = int(w / no_width_grids)
 
+    # pixelating the modified image
     image = image.resize(
         (image.size[0] // pixel_size, image.size[1] // pixel_size),
         Image.NEAREST
@@ -174,28 +182,40 @@ def pixelate(input_image, no_width_grids):
     return (image)
 
 
-def grided_image(input_image, no_width_grids):
-    # this function is drawing grids according to no. of stitches needed (no_width_grids)
+def grided_image(input_image, no_width_grids, flag=0):
+    """Draw grids according to no. of stitches needed (no_width_grids) .
 
-    # first use the pixelate function to convert the input_image into pixelated_image
-    pixelated_image = pixelate(input_image, no_width_grids)
+    Parameters
+    ---------
+    input_image: PIL image.
+
+    no_width_grids: number of stitches of the width .
+
+    flag (Default = 0) : optional input to give options for input image to be an original image
+                         or pixelated image.
+    """
+
+    if flag == 1:
+        pixelated_image = input_image
+    else:
+        pixelated_image = pixelate(input_image, no_width_grids)
 
     # trying to get pixel_size
     pixel_size = int(pixelated_image.size[0] / no_width_grids)
+
+    # getting dimension of pixelated_image
     (w, h) = pixelated_image.size[:2]
+
+    # convert pixelated_image from PIL to np.array
     grided = np.array(pixelated_image)
-    print(type(grided))
+
+    # some initializations are used for drawing colomns and rows
     size_of_grid_c = pixel_size
     size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
-    # here the height and width calculations
-    # getting size of etamin in cm
-    globals.width = int(w / pixel_size) / 3  # 3 is no. of grids in 1 cm
-    globals.height = int(h / pixel_size) / 3  # 3 is no. of grids in 1 cm
-    ################
-    # drawing columns
 
+    # drawing columns using cv2.line
     for i in range(int(w / pixel_size)):
         location_of_col = location_of_col + size_of_grid_c
 
@@ -206,7 +226,8 @@ def grided_image(input_image, no_width_grids):
         color = (0, 0, 0)
         thickness = 1
         grided = cv2.line(grided, start_point_col, end_point_col, color, thickness)
-        # drawing rows
+
+    # drawing rows using cv2.line
     for i in range(int(h / pixel_size)):
         location_of_row = location_of_row + size_of_grid_r
 
@@ -218,20 +239,37 @@ def grided_image(input_image, no_width_grids):
         thickness = 1
         grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
 
+    # plotting the gridded image
     plt.figure(figsize=(30, 30))
     plt.imshow(grided)
     plt.savefig(os.path.join(globals.app.static_folder, "gridded.png"))
 
 
 def dimension(no_width_grids):
+    """Give the dimension of gridded image by cm .
+
+    Parameters
+    ---------
+    no_width_grids: number of stitches of the width .
+
+
+    """
+
     image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
     image_input = Image.open(image_path)
+
+    # converting the image to pixelated_image
     image = pixelate(image_input, no_width_grids)
-    pixel_size = int(image.size[0]/no_width_grids)
+
+    # getting the size of pixel
+    pixel_size = int(image.size[0] / no_width_grids)
+
+    # getting the dimension of pixelated image
     (w, h) = image.size[:2]
-    globals.width = int(w / pixel_size) / 3   # 3 is no. of grids in 1 cm
-    globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
-    # return (globals.width, globals.height)
+
+    # calculating the dimension gridded image by cm
+    globals.width = int(w / pixel_size) / 3  # 3 is no. of grids in 1 cm
+    globals.height = int(h / pixel_size) / 3  # 3 is no. of grids in 1 cm
 
 
 def init_app():
