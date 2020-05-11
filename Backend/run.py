@@ -84,23 +84,19 @@ def HEX2RGB(color):
 
 
 def get_colors(image, number_of_colors, show_chart, dmc_df):
-    # modified_image = cv2.resize(image, (600, 400), interpolation=cv2.INTER_AREA)
-    image = pixelate(image, globals.no_width_grids)
+    image = pixelate(image,globals.no_width_grids)
+
     # trying to get pixel_size
     pixel_size = int(image.size[0] / globals.no_width_grids)
     image = np.asarray(image)
+
     modified_image = image.reshape(image.shape[0] * image.shape[1], 3)
 
-    # Arrange all pixels into a tall column of 3 RGB values and find unique rows (colours)
-    # just a trial
-    colours, counts2 = np.unique(image.reshape(-1, 3), axis=0, return_counts=1)
-    # print(colours)
-    # print(counts2)
-    # print(len(counts2))
     clf = KMeans(n_clusters=number_of_colors)
     labels = clf.fit_predict(modified_image)
     counts = Counter(labels)
     center_colors = clf.cluster_centers_
+
     # We get ordered colors by iterating through the keys
     ordered_colors = [center_colors[i] for i in counts.keys()]
     hex_colors = [RGB2HEX(ordered_colors[i]) for i in counts.keys()]
@@ -109,23 +105,50 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     dmc_colors_hex_labels = []
     dmc_colors_rgb = []
     pie_dmc = []
+
     sorted_counts = list(counts.values())
 
-    
     for i in range(len(hex_colors)):
         r = int(round(rgb_colors[i][0]))
         g = int(round(rgb_colors[i][1]))
         b = int(round(rgb_colors[i][2]))
         dmc_code, r, g, b, dmc_hex = matchDMC(r, g, b, dmc_df)
         dmc_colors_codes.append("DMC code: " + str(dmc_code))
-
-        # dmc_colors_rgb.append([r, g, b])
+        dmc_colors_rgb.append([r, g, b])
         dmc_colors_hex_labels.append("#" + dmc_hex.lower())
 
         # Adding the number of skeins to the pie chart
         pixelate_count = (int(sorted_counts[i] / (pixel_size * pixel_size)))
         list_skeins = ("no of skeins: " + str(math.ceil(pixelate_count / 1493)))
         pie_dmc.append([dmc_colors_codes[i], list_skeins])
+
+    # conversion the color of input_image to the specific no.of colors entered by user
+    result = image.reshape(-1, 3)
+
+    (h, w) = image.shape[:2]
+
+    new_image = []
+
+    for i in range(len(labels)):
+        label_color = labels[i]
+        r = int(round(dmc_colors_rgb[label_color][0]))
+        g = int(round(dmc_colors_rgb[label_color][1]))
+        b = int(round(dmc_colors_rgb[label_color][2]))
+        new_image.append([r, g, b])
+
+    #
+    new = np.reshape(new_image, (h, w, 3))
+
+    # convert the image from np.array to PIL.Image
+    img = Image.fromarray(new.astype(np.uint8))
+
+    # plotting image after conversion its color
+    plt.figure(figsize=(10, 15))
+    plt.imshow(img)
+
+    # converting to gridde_image
+    grided_image(img, globals.no_width_grids, 1)
+    ########
 
     if show_chart:
         # pie_chart_with_hex_values
