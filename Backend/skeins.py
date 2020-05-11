@@ -62,7 +62,6 @@ def get_colors(image, number_of_colors, show_chart, dmc_df, no_width_grids=90):
     print(pixel_size)
     plt.figure()
     plt.imshow(image)
-
     image = np.asarray(image)
     ####
     # modified_image = cv2.resize(image, (600, 400), interpolation=cv2.INTER_AREA)

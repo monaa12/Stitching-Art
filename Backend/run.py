@@ -84,8 +84,19 @@ def HEX2RGB(color):
 
 
 def get_colors(image, number_of_colors, show_chart, dmc_df):
-    modified_image = cv2.resize(image, (600, 400), interpolation=cv2.INTER_AREA)
-    modified_image = modified_image.reshape(modified_image.shape[0] * modified_image.shape[1], 3)
+    # modified_image = cv2.resize(image, (600, 400), interpolation=cv2.INTER_AREA)
+    image = pixelate(image, globals.no_width_grids)
+    # trying to get pixel_size
+    pixel_size = int(image.size[0] / globals.no_width_grids)
+    image = np.asarray(image)
+    modified_image = image.reshape(image.shape[0] * image.shape[1], 3)
+
+    # Arrange all pixels into a tall column of 3 RGB values and find unique rows (colours)
+    # just a trial 
+    colours, counts2 = np.unique(image.reshape(-1, 3), axis=0, return_counts=1)
+    # print(colours)
+    # print(counts2)
+    # print(len(counts2))
     clf = KMeans(n_clusters=number_of_colors)
     labels = clf.fit_predict(modified_image)
     counts = Counter(labels)
@@ -94,28 +105,43 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     ordered_colors = [center_colors[i] for i in counts.keys()]
     hex_colors = [RGB2HEX(ordered_colors[i]) for i in counts.keys()]
     rgb_colors = [ordered_colors[i] for i in counts.keys()]
-    ##################
     dmc_colors_codes = []
     dmc_colors_hex_labels = []
     dmc_colors_rgb = []
+    pie_dmc = []
+    sorted_counts = list(counts.values())
+    sorted_counts.sort(reverse=True)
     for i in range(len(hex_colors)):
         r = int(round(rgb_colors[i][0]))
         g = int(round(rgb_colors[i][1]))
         b = int(round(rgb_colors[i][2]))
         dmc_code, r, g, b, dmc_hex = matchDMC(r, g, b, dmc_df)
-        dmc_colors_codes.append(dmc_code)
+        dmc_colors_codes.append("DMC code: " + str(dmc_code))
+
         # dmc_colors_rgb.append([r, g, b])
         dmc_colors_hex_labels.append("#" + dmc_hex.lower())
-    ####################
+
+        # Adding the number of skeins to the pie chart
+        pixelate_count = (int(sorted_counts[i] / (pixel_size * pixel_size)))
+        list_skeins = ("no of skeins: " + str(math.ceil(pixelate_count / 1493)))
+        pie_dmc.append([dmc_colors_codes[i], list_skeins])
 
     if show_chart:
+        # pie_chart_with_hex_values
         plt.figure(figsize=(8, 6))
-        plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
+        # plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
+        plt.pie(counts.values(), colors=hex_colors, autopct='%1.1f%%')
+        plt.legend(labels=hex_colors, loc='upper right')
+        plt.tight_layout()
         plt.savefig(os.path.join(globals.app.static_folder, "pie_chart.png"))
 
-        # dmc_pie_chart
-        plt.figure(figsize=(8, 6))
-        plt.pie(counts.values(), labels=dmc_colors_codes, colors=dmc_colors_hex_labels)
+        # dmc_pie_chart_with_number_of_skeins
+        plt.figure(figsize=(12, 10))
+        # plt.pie(counts.values(), labels=dmc_colors_codes, colors=dmc_colors_hex_labels)
+        # plt.pie(counts.values(), labels=pie_dmc, colors=dmc_colors_hex_labels)
+        plt.pie(counts.values(), colors=dmc_colors_hex_labels, autopct='%1.1f%%')
+        plt.legend(labels=pie_dmc, loc='upper right', fontsize=13)
+        plt.tight_layout()
         plt.savefig(os.path.join(globals.app.static_folder, "dmc_pie_chart.png"))
     return rgb_colors
 
@@ -148,19 +174,10 @@ def pixelate(input_image, no_width_grids):
     return (image)
 
 
-def dimension (input_image, no_width_grids):
-    image = pixelate(input_image, no_width_grids)
-    pixel_size = int(image.size[0]/no_width_grids)
-    (w, h) = image.size[:2]
-    globals.width = int((w)/(pixel_size)) / 3 # 3 is no. of grids in 1 cm
-    globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
-    return (globals.width, globals.height)
-
-
 def grided_image(input_image, no_width_grids):
     # this function is drawing grids according to no. of stitches needed (no_width_grids)
 
-    # first use the pixelate function to convert the input_impage into pixelated_image
+    # first use the pixelate function to convert the input_image into pixelated_image
     pixelated_image = pixelate(input_image, no_width_grids)
 
     # trying to get pixel_size
@@ -172,7 +189,11 @@ def grided_image(input_image, no_width_grids):
     size_of_grid_r = pixel_size
     location_of_row = 0
     location_of_col = 0
-
+    # here the height and width calculations
+    # getting size of etamin in cm
+    globals.width = int(w / pixel_size) / 3  # 3 is no. of grids in 1 cm
+    globals.height = int(h / pixel_size) / 3  # 3 is no. of grids in 1 cm
+    ################
     # drawing columns
 
     for i in range(int(w / pixel_size)):
@@ -202,6 +223,17 @@ def grided_image(input_image, no_width_grids):
     plt.savefig(os.path.join(globals.app.static_folder, "gridded.png"))
 
 
+def dimension(no_width_grids):
+    image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
+    image_input = Image.open(image_path)
+    image = pixelate(image_input, no_width_grids)
+    pixel_size = int(image.size[0]/no_width_grids)
+    (w, h) = image.size[:2]
+    globals.width = int(w / pixel_size) / 3   # 3 is no. of grids in 1 cm
+    globals.height = int(h/pixel_size) / 3    # 3 is no. of grids in 1 cm
+    # return (globals.width, globals.height)
+
+
 def init_app():
     json_file_path = "./rgb-dmc.json"
     # test conversion
@@ -213,19 +245,15 @@ def init_app():
         im_pil, bbox, labels = object_detection(image_path)
         im_np, im_pil = crop_object(im_pil, bbox, labels, globals.label)
         get_colors(im_np, globals.number_of_colors, True, dmc_df)
-        # new_image = resized_image(im_pil, 16, 21)
-        #pixelated = pixelate(im_pil)
         grided_image(im_pil, globals.no_width_grids)
 
     else:
         im_np = get_image(image_path)
-        # im_np = cv2.imread(image_path)
-        get_colors(im_np, globals.number_of_colors, True, dmc_df)
-        # fot testing  gridded
         image_input = Image.open(image_path)
-        # new_image = resized_image(image_input, 16, 21)
-        # new_image = resized_image(image_input, globals.width, globals.height)
-        # pixelated = pixelate(image_input)
+        # get_colors(im_np, globals.number_of_colors, True, dmc_df)
+        get_colors(image_input, globals.number_of_colors, True, dmc_df)
+        # fot testing  gridded
+        # image_input = Image.open(image_path)
         grided_image(image_input, globals.no_width_grids)
 
     return ""

@@ -1,8 +1,5 @@
 from flask import Flask, jsonify, request, send_from_directory, redirect, flash, url_for
 from werkzeug.utils import secure_filename
-import numpy as np
-import cv2
-import io
 import os
 import globals
 import run
@@ -14,6 +11,11 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'PNG'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 globals.app = app
+globals.obj_flag = False
+globals.width = 10
+globals.height = 10
+globals.no_width_grids = 0
+globals.number_of_colors = 8
 
 
 @app.route("/automatic_crop", methods=['GET', 'POST'])
@@ -35,21 +37,20 @@ def manual_crop():
 
 
 @app.route("/params", methods=['GET', 'POST'])
-def post_width_height():
+def post_get_params():
     if request.method == "POST":
         # TODO:To be changed into width-->no_width_grids and height--> number_of_colors
         dim = request.json
         globals.no_width_grids = dim['width']
         globals.number_of_colors = dim['height']
-        # run.init_app()
         return jsonify(message="no_width_grids in server side=" + str(globals.no_width_grids))
     else:
+        run.dimension(globals.no_width_grids)
         return jsonify(width=globals.width, height=globals.height)
     return jsonify(message="Not a post request on posting no_width_grids")
 
 
-# TODO:Create an api to get the width and height in cms and check it's route
-# TODO: integrate it with post function
+# not used (integrated with post_get_params)
 # @app.route("/params")
 def get_width_height():
     return jsonify(width=globals.width, height=globals.height)
@@ -61,9 +62,7 @@ def allowed_file(filename):
 
 
 @app.route('/<path:filename>')
-# @app.route("/automatic_crop/<path:filename>")
-# @app.route('/gridded')
-def send_file(filename):
+def GET_file(filename):
     if filename == "gridded":
         run.init_app()
     return send_from_directory(app.static_folder, filename+".png")
@@ -90,13 +89,7 @@ def POST_file():
                 return jsonify(message="No selected image")
             if globals.photo and allowed_file(globals.photo.filename):
                 photo_name = secure_filename(globals.photo.filename)
-                # in_memory_file = io.BytesIO()
-                # photo.save(in_memory_file)
-                # data = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
-                # color_image_flag = 1
-                # img = cv2.imdecode(data, color_image_flag)
                 globals.photo.save(os.path.join(app.config['UPLOAD_FOLDER'], globals.photo.filename))
-                # return img
                 # return redirect(url_for('uploaded_file', filename=photo_name))
                 return jsonify(message="Successfully uploaded" + globals.photo.filename)
 
