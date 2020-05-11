@@ -1,6 +1,6 @@
 
-![cover]( C:\Users\Lenovo\Desktop)
-Format:![Alt Text] (url)
+![image]( C:\Users\Lenovo\Desktop.png "Title")
+
 
 
 
@@ -26,7 +26,7 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ---
 
 ## Specification
--Mobile application it's output a grided image with a pie chart of dmc code 
+-Simple mobile application developing cross stitching gridded pattern of your chosen image. 
 
 -The front-end is in [Flutter](https://flutter.dev) framework.
 
