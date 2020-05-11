@@ -1,8 +1,6 @@
-<p align="center">
 
-<img  src = C:\Users\Lenovo\Desktop>
+![alt text]( C:\Users\Lenovo\Desktop)
 
-</p>
 
 
 # Stitching-Art
@@ -27,7 +25,7 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ---
 
 ## Specification
--Mobile development 
+-Mobile application 
 
 -The front-end is in [Flutter](https://flutter.dev) framework.
 
