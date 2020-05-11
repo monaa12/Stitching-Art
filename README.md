@@ -1,5 +1,6 @@
 
-![alt text]( C:\Users\Lenovo\Desktop)
+![cover]( C:\Users\Lenovo\Desktop)
+Format:![Alt Text] (url)
 
 
 
@@ -25,7 +26,7 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ---
 
 ## Specification
--Mobile application 
+-Mobile application it's output a grided image with a pie chart of dmc code 
 
 -The front-end is in [Flutter](https://flutter.dev) framework.
 
