@@ -92,7 +92,7 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     modified_image = image.reshape(image.shape[0] * image.shape[1], 3)
 
     # Arrange all pixels into a tall column of 3 RGB values and find unique rows (colours)
-    # just a trial 
+    # just a trial
     colours, counts2 = np.unique(image.reshape(-1, 3), axis=0, return_counts=1)
     # print(colours)
     # print(counts2)
@@ -110,7 +110,7 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     dmc_colors_rgb = []
     pie_dmc = []
     sorted_counts = list(counts.values())
-    sorted_counts.sort(reverse=True)
+    # sorted_counts.sort(reverse=True)
     for i in range(len(hex_colors)):
         r = int(round(rgb_colors[i][0]))
         g = int(round(rgb_colors[i][1]))
@@ -128,10 +128,12 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
 
     if show_chart:
         # pie_chart_with_hex_values
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(12, 10))
         # plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
         plt.pie(counts.values(), colors=hex_colors, autopct='%1.1f%%')
-        plt.legend(labels=hex_colors, loc='upper right')
+        plt.title("Original pie chart")
+        plt.legend(labels=hex_colors, bbox_to_anchor=(0.85, 1.025), loc='upper left', fontsize=13)
+        plt.subplots_adjust(left=0.1, bottom=0.1, right=0.81)
         plt.tight_layout()
         plt.savefig(os.path.join(globals.app.static_folder, "pie_chart.png"))
 
@@ -140,7 +142,9 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
         # plt.pie(counts.values(), labels=dmc_colors_codes, colors=dmc_colors_hex_labels)
         # plt.pie(counts.values(), labels=pie_dmc, colors=dmc_colors_hex_labels)
         plt.pie(counts.values(), colors=dmc_colors_hex_labels, autopct='%1.1f%%')
-        plt.legend(labels=pie_dmc, loc='upper right', fontsize=13)
+        plt.title("DMC pie chart")
+        plt.legend(labels=pie_dmc, bbox_to_anchor=(0.85, 1.025),  loc='upper left', fontsize=13)
+        plt.subplots_adjust(left=0.1, bottom=0.1, right=0.81)
         plt.tight_layout()
         plt.savefig(os.path.join(globals.app.static_folder, "dmc_pie_chart.png"))
     return rgb_colors
@@ -236,24 +240,19 @@ def dimension(no_width_grids):
 
 def init_app():
     json_file_path = "./rgb-dmc.json"
-    # test conversion
     dmc_df = conversion_dmc(json_file_path)
-    # for testing
     image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
 
     if globals.obj_flag:
         im_pil, bbox, labels = object_detection(image_path)
         im_np, im_pil = crop_object(im_pil, bbox, labels, globals.label)
-        get_colors(im_np, globals.number_of_colors, True, dmc_df)
+        get_colors(im_pil, globals.number_of_colors, True, dmc_df)
         grided_image(im_pil, globals.no_width_grids)
 
     else:
-        im_np = get_image(image_path)
+        # im_np = get_image(image_path)
         image_input = Image.open(image_path)
-        # get_colors(im_np, globals.number_of_colors, True, dmc_df)
         get_colors(image_input, globals.number_of_colors, True, dmc_df)
-        # fot testing  gridded
-        # image_input = Image.open(image_path)
         grided_image(image_input, globals.no_width_grids)
 
     return ""
