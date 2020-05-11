@@ -20,8 +20,9 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ---
 
 ## Specification
+- The front-end is in [Flutter](https://flutter.dev)
 
-
+-The back-end is in [Python 3](https://www.python.org/download/releases/3.0/) using [Flask](http://flask.pocoo.org/) framework.
 
 ---
 
@@ -35,7 +36,10 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 
 ---
 ## Our Team
-
-
+- [Mona Mahmoud Abdelhafez](https://github.com/monaa12)
+- [Menna Tullah Hussein Ali](https://github.com/menna-hussien)
+- [Esraa Mohsen Salah](https://github.com/Esraa1moshsen)
+- [Haidy Samir Elsayed](https://github.com/HaidySamir1696)
+- [Nour Elhoda Ashraf Muhammad](https://github.com/nourelhoda25)
 
 ---
