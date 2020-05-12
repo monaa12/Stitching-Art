@@ -15,7 +15,24 @@ class _DMCChartState extends State<DMCChart> {
   String downloadingStr="No data";
   double download=0.0;
   File f;
-  var imageUrl="http://10.0.2.2:5000/dmc_pie_chart";
+  var imageUrl="http://127.0.0.1:5000/dmc_pie_chart";
+  Widget getImageWidget() {
+    if (f != null) {
+      return Image.file(
+        f,
+       // width: 500,
+       // height: 500,
+       // fit: BoxFit.cover,
+      );
+    } else {
+      return Image.network(
+        "assets/loading.jpg",
+      //  width: 500,
+      //  height: 500,
+       // fit: BoxFit.cover,
+      );
+    }
+  }
   Future<void> downloadDMCPieChart(imageUrl) async
   {
     try{
@@ -44,7 +61,6 @@ class _DMCChartState extends State<DMCChart> {
   void initState() {
     super.initState();
     downloadDMCPieChart(imageUrl);
-
   }
 
   Widget build(BuildContext context) {
@@ -60,7 +76,23 @@ class _DMCChartState extends State<DMCChart> {
         centerTitle: true ,
         backgroundColor: Colors.red[700],
       ),
-      body: Center(
+      body:
+     // Center(
+     //   child:getImageWidget(),
+      //),
+      /*Column(
+        // child: Center(
+        //child: Image.file(f,height: 600, width: 600,fit: BoxFit.cover),
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          getImageWidget(),
+          //Image.file(f, height: 600, width: 600, fit: BoxFit.cover),
+
+        ],
+      ),
+      */
+      Center(
         child: downloading?Container(
           height: 250,
           width: 250,
@@ -76,18 +108,21 @@ class _DMCChartState extends State<DMCChart> {
             ),
           ),
         ):Container(
-          child: Center(
-            child: Image.file(f,height: 600, width: 600,),
+          child:
+          Center(
+            child:Image.file(f,height: 650, width: 650,),
           ),
         ),
       ),
+
+
       floatingActionButton:  FloatingActionButton(
         onPressed: () {
           //Navigator.push(context, MaterialPageRoute(builder: (context) => Chart()));
           Navigator.pushNamed(context, '/');
         },
         child: Icon(
-            Icons.navigate_next
+            Icons.done
         ),
         backgroundColor: Colors.red,
       ),
