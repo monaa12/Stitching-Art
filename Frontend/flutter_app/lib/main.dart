@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 //needed .dart files
+import 'dmc_gridded.dart';
 import'num_stitches.dart';
 import 'pie_chart.dart';
 import 'Gridded_image.dart';
@@ -14,11 +15,12 @@ void main() => runApp(MaterialApp(
   //home:Home(),
   initialRoute:'/',
   routes: {'/':(context)=>Home(),
-    '/params':(context)=>output(),
+    '/params':(context)=>StitchesColors(),
     '/automatic_crop':(context)=>Home(),
     '/gridded':(context)=>Gridded(),
     '/pie_chart':(context)=>Chart(),
     '/dmc_pie_chart': (context)=> DMCChart(),
+    '/gridded_DMC' : (context)=>DMCGridded(),
   },
 ));
 class Home extends StatefulWidget {
@@ -28,11 +30,12 @@ class Home extends StatefulWidget {
 }
 class _HomeState extends State<Home> {
   File _selectedFile;
-//  final GlobalKey<ScaffoldState> _scaffoldstate =new GlobalKey<ScaffoldState>();
+  //function to upload images with camera or gallery
   getImage(ImageSource source) async{
     var image = await ImagePicker.pickImage(source:source);
     setState(() => _selectedFile = image);
   }
+  //function showing options to use camera or gallery
   void _showOptions(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -59,6 +62,7 @@ class _HomeState extends State<Home> {
         }
     );
   }
+  //function showing options to use cropper or object detection
   Future<void> _showChoiceDialog(BuildContext context){
     return showDialog(context: context,builder:(BuildContext context){
       return AlertDialog(
@@ -106,7 +110,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 onTap: (){cropImage(_selectedFile);
-                Navigator.of(context).pop();},
+                  Navigator.of(context).pop();},
               )
             ],
           ),
@@ -122,9 +126,6 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              // Navigator.pushNamed(context, '/automatic_crop');
-              // uploadLabel(object);
-              //uploadLabelImage(object,_selectedFile);
             },
           )
         ],
@@ -135,15 +136,15 @@ class _HomeState extends State<Home> {
     if (_selectedFile != null) {
       return Image.file(
         _selectedFile,
-        width: 250,
-        height: 250,
+        width: 400,
+        height: 400,
         fit: BoxFit.cover,
       );
     } else {
       return Image.asset(
         "assets/download.jpg",
-        width: 250,
-        height: 250,
+        width: 400,
+        height: 400,
         fit: BoxFit.cover,
       );}
   }
@@ -151,7 +152,6 @@ class _HomeState extends State<Home> {
     this.setState((){
       // _inProcess = true;
     });
-    //File image = await ImagePicker.pickImage(source: source);
     if(img != null){
       File cropped = await ImageCropper.cropImage(
           sourcePath: img.path,
@@ -189,7 +189,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: scaffoldstate,
+     // key: scaffoldstate,
       appBar: AppBar(
         title:Text('Stitching Art',
           style: TextStyle(
@@ -242,6 +242,7 @@ class _HomeState extends State<Home> {
             ],
           ),
           Padding(padding: EdgeInsets.all(10.0)),
+          /*
           Expanded(
             flex:1,
             child: Container(
@@ -334,18 +335,14 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-
+*/
         ],
       ),
-      /*
-      Center(
-        child: Image(
-          image: AssetImage('assets/cfff.jpg'),
-        )
-      ),*/
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => output()));
+         // Navigator.push(context, MaterialPageRoute(builder: (context) => output()));
+          //uploadText(result);
           if (object != "") {
             Navigator.pushNamed(context, '/automatic_crop');
             uploadLabel(object);
