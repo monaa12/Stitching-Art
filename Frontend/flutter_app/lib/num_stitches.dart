@@ -17,6 +17,7 @@ class _outputState extends State<output> {
   String result="";
   String result2="";
   String res="";
+ Future <List<double>>dim;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,9 +136,9 @@ class _outputState extends State<output> {
                   setState(() {
                     result = str;
                   });
-                  controller.text="";
+                  controller2.text="";
                 },
-                controller: controller,
+                controller: controller2,
               )
               ,
             ),
@@ -145,6 +146,97 @@ class _outputState extends State<output> {
         ],
           ),
         ),
+          MaterialButton(
+               color:Colors.red[600],
+
+              child: Text(
+                "Show expected output dimensions"
+                //Icons.add_a_photo
+              ),
+              //backgroundColor: Colors.red,
+              onPressed: () {
+              dim= uploadStitches(res,result);
+               // _showOptions(context);
+              }),
+          MaterialButton(
+              color: Colors.deepOrange,
+              child: Icon(
+                  Icons.add_a_photo
+              ),
+              //  child: Text(
+
+              //  "Device",
+              // style: TextStyle(color: Colors.white),
+              //),
+              onPressed: () {
+
+                dim= uploadStitches(res,result);
+              }
+          ),
+
+          Expanded(
+            flex:1,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex:1,
+                  child: Container(
+
+                    padding: EdgeInsets.all(10.0),
+                    color: Colors.red[600],
+                    child: Text('width:',
+                      style: TextStyle(
+                        fontSize:20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex:1,
+                  child: Container(
+
+                    padding: EdgeInsets.all(10.0),
+                    //color: Colors.red[200],
+                    child: Text(
+                      dim.toString() ,
+                    )
+                    ,
+                  ),
+                ),
+                //Text('width'),
+                //Text('length'),
+                Expanded(
+                  flex:1,
+                  child: Container(
+
+                    padding: EdgeInsets.all(10.0),
+                    color: Colors.red[600],
+                    child: Text('length:',
+                      style: TextStyle(
+                        fontSize:20.0,
+                        fontWeight: FontWeight.bold,
+                      ) ,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex:1,
+                  child: Container(
+
+                    padding: EdgeInsets.all(10.0),
+                    //color: Colors.red[200],
+                    child:new Text(
+                      dim.toString(),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+
+          //////////////////haiodaaa
           Expanded (
             flex:2,
             child: Container(
@@ -160,7 +252,7 @@ class _outputState extends State<output> {
         onPressed: () {
           //Navigator.push(context, MaterialPageRoute(builder: (context) => Gridded()));
           Navigator.pushNamed(context, '/gridded');
-          uploadStitches(res,result);
+          //uploadStitches(res,result);
           /// hanb3t hena el number of colors
           //uploadStitches(result);
         },
