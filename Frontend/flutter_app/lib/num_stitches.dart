@@ -76,7 +76,7 @@ class _outputState extends State<output> {
                     ),
                   ),
                 ),
-               
+                ////henaaaa ya haiodaaa
               Expanded(
                 flex:1,
                 child: Container(
@@ -146,19 +146,24 @@ class _outputState extends State<output> {
         ],
           ),
         ),
-          MaterialButton(
-               color:Colors.red[600],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              MaterialButton(
+                   color:Colors.red[600],
 
-              child: Text(
-                "Show expected output dimensions"
-                //Icons.add_a_photo
-              ),
-              //backgroundColor: Colors.red,
-              onPressed: () {
-              dim= uploadStitches(res,result);
-               // _showOptions(context);
-              }),
-          
+                  child: Text(
+                    "Show expected output dimensions"
+                    //Icons.add_a_photo
+                  ),
+                  //backgroundColor: Colors.red,
+                  onPressed: () {
+                  dim= uploadStitches(res,result);
+                   // _showOptions(context);
+                  }),
+            ],
+          ),
+
           Expanded(
             flex:1,
             child: Row(
@@ -168,9 +173,10 @@ class _outputState extends State<output> {
                   child: Container(
 
                     padding: EdgeInsets.all(10.0),
-                    color: Colors.red[600],
+                    color: Colors.white70,
                     child: Text('width:',
                       style: TextStyle(
+                        color: Colors.red[600],
                         fontSize:20.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -196,9 +202,10 @@ class _outputState extends State<output> {
                   child: Container(
 
                     padding: EdgeInsets.all(10.0),
-                    color: Colors.red[600],
+                    color: Colors.white70,
                     child: Text('length:',
                       style: TextStyle(
+                        color: Colors.red[600],
                         fontSize:20.0,
                         fontWeight: FontWeight.bold,
                       ) ,
