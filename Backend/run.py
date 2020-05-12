@@ -82,12 +82,11 @@ def crop_object(im_pil, bbox, labels, gb_label):
     ---------
     im_pil: PIL image .
 
-    bbox: output from objrct detection fn ,box the is drawn around the object want to be cropped.
+    bbox: the output box created by object detection function
 
-    labels:the name of the object the user entered to be cropped .
+    labels: labels of detected objects in the image
 
-    gb_label: .
-
+    gb_label: global.label value sent by the user
 
     """
 
@@ -117,7 +116,7 @@ def RGB2HEX(color):
 
     Parameters
     ---------
-    color: rgb code   .
+    color:  required color in RGB to be converted to HEX
 
     """
     return "#{:02x}{:02x}{:02x}".format(int(round(color[0])), int(round(color[1])), int(round(color[2])))
@@ -128,7 +127,7 @@ def HEX2RGB(color):
 
     Parameters
     ---------
-    color: hex value of the color .
+    color:  required color in HEX to be converted to RGB
 
 
     """
@@ -179,8 +178,7 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     dmc_colors_rgb = []
     pie_dmc = []
     sorted_counts = list(counts.values())
-    
-    #
+
     for i in range(len(hex_colors)):
         r = int(round(rgb_colors[i][0]))
         g = int(round(rgb_colors[i][1]))
@@ -303,7 +301,7 @@ def grided_image(input_image, no_width_grids, flag=0):
     # convert pixelated_image from PIL to np.array
     grided = np.array(pixelated_image)
 
-    # some initializations are used for drawing colomns and rows
+    # some initializations are used for drawing columns and rows
     size_of_grid_c = pixel_size
     size_of_grid_r = pixel_size
     location_of_row = 0
@@ -336,11 +334,23 @@ def grided_image(input_image, no_width_grids, flag=0):
     # plotting the gridded image
     if flag == 1:
         plt.figure(figsize=(30, 30))
+        plt.title("DMC Gridded Pattern", fontsize=80)
         plt.imshow(grided)
-        plt.savefig(os.path.join(globals.app.static_folder, "gridded_DMC.png"))
+        plt.subplots_adjust(left=0.1, bottom=0.1, right=0.81, hspace=0, wspace=0)
+        plt.suptitle("The real dimensions in cm( width:" + str(globals.width) + " ,height:" + str(globals.height) + ")",
+                     va='bottom', ha='center', fontsize=40, y=-0.001)
+        plt.tight_layout()
+        plt.savefig(os.path.join(globals.app.static_folder, "gridded_DMC.png"), bbox_inches='tight',
+                    pad_inches=0)
+
     else:
         plt.figure(figsize=(30, 30))
+        plt.title("Original Gridded Pattern", fontsize=80)
         plt.imshow(grided)
+        plt.subplots_adjust(left=0.1, bottom=0.1, right=0.81)
+        plt.suptitle("The real dimensions in cm( width:" + str(globals.width) + " ,height:" + str(globals.height) + ")",
+                     va='bottom', ha='center', y=-0.001, fontsize=40)
+        plt.tight_layout()
         plt.savefig(os.path.join(globals.app.static_folder, "gridded.png"))
 
 
@@ -349,7 +359,7 @@ def dimension(no_width_grids):
 
        Parameters
        ---------
-       no_width_grids: number of stitches of the width .
+       no_width_grids: number of stitches of the width sent by the user.
 
 
        """
@@ -371,8 +381,7 @@ def dimension(no_width_grids):
 
 
 def init_app():
-    """  the function is used for mobile app  .
-
+    """  the function is used to initialize the image processing phase of the app .
     """
 
     json_file_path = "./rgb-dmc.json"
@@ -395,7 +404,7 @@ def init_app():
 
 
 def distanceFromColor(idx, r, g, b, dmc_df):
-    """ Calculate the distance between r,g,b and the colors in the dataframe  .
+    """ Calculate the distance between r,g,b and a certain color in the dataframe identified by idx  .
 
     Parameters
     ---------
@@ -409,13 +418,12 @@ def distanceFromColor(idx, r, g, b, dmc_df):
 
     dmc_df: the dataframe of DMC colors (jason file) .
 
-
     """
     tr = dmc_df.loc[idx]['r']
     tg = dmc_df.loc[idx]['g']
     tb = dmc_df.loc[idx]['b']
     
-    #calculating the shortest distance between the color presented in the image with all the colors in the dataframe in order to get the closest color
+    # calculating the distance between the color given and the target color in the dataframe
     base_distance = ((r - tr) * (r - tr)) + ((g - tg) * (g - tg)) + ((b - tb) * (b - tb))
     distance = math.sqrt(base_distance)
     return distance
@@ -433,7 +441,6 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
     blueVal: the value of blue color.
 
     dmc_df: Dataframe of DMC colors .
-
 
     """
     distance_list = []
@@ -453,8 +460,8 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
     # sort the list in ascending order in order to take the shortest distance which is th closest color
     distance_list.sort()
 
-    # Get the values that are closest to the RGB value from first row of {distance_list} and idx column and search in the dataframe to get the color
-    # (which is the same id in data frame of dmc colors{dmc_df})
+    # Get the values that are closest to the RGB value from first row of {distance_list} and idx column and search in
+    # the dataframe to get the color (which is the same id in data frame of dmc colors{dmc_df})
     dmc_i = dmc_df.loc[distance_list[0][1]]['floss']
     dmc_r = dmc_df.loc[distance_list[0][1]]['r']
     dmc_g = dmc_df.loc[distance_list[0][1]]['g']
