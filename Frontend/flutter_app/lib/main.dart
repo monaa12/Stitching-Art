@@ -132,8 +132,10 @@ class _HomeState extends State<Home> {
       );
     });
   }
+  //Selecting image to be shown on home page
   Widget getImageWidget() {
     if (_selectedFile != null) {
+      //_selectedFile is the photo uploaded with gallery or camera
       return Image.file(
         _selectedFile,
         width: 400,
@@ -148,9 +150,9 @@ class _HomeState extends State<Home> {
         fit: BoxFit.cover,
       );}
   }
+  //Cropping function
   cropImage(File img) async {
     this.setState((){
-      // _inProcess = true;
     });
     if(img != null){
       File cropped = await ImageCropper.cropImage(
@@ -179,17 +181,13 @@ class _HomeState extends State<Home> {
       });
     }
   }
-  //for text fields
-  final TextEditingController controller= new TextEditingController ();
-  final TextEditingController controller2= new TextEditingController ();
+  //input text fields to choose object in object detection
   final TextEditingController objectController= new TextEditingController ();
-  String result="";
-  String result2="";
   String object="";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     // key: scaffoldstate,
+
       appBar: AppBar(
         title:Text('Stitching Art',
           style: TextStyle(
@@ -200,7 +198,7 @@ class _HomeState extends State<Home> {
         centerTitle: true ,
         backgroundColor: Colors.redAccent[700],
       ),
-      //backgroundColor: Colors.red[600],
+
       body:
       Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -242,107 +240,11 @@ class _HomeState extends State<Home> {
             ],
           ),
           Padding(padding: EdgeInsets.all(10.0)),
-          /*
-          Expanded(
-            flex:1,
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              color: Colors.red[600],
-              child: Text('Select Dimensions:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25.0,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex:3,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex:1,
-                  child: Container(
-
-                    padding: EdgeInsets.all(10.0),
-                    color: Colors.red[600],
-                    child: Text('width:',
-                      style: TextStyle(
-                        fontSize:20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex:1,
-                  child: Container(
-
-                    padding: EdgeInsets.all(10.0),
-                    //color: Colors.red[200],
-                    child:          new TextField(
-                      decoration: new InputDecoration(
-                          hintText: "width"
-                      ),
-                      onSubmitted: (String str){
-                        setState(() {
-                          result = str;
-                        });
-                        controller.text="";
-                      },
-                      controller: controller,
-                    )
-                    ,
-                  ),
-                ),
-                //Text('width'),
-                //Text('length'),
-                Expanded(
-                  flex:1,
-                  child: Container(
-
-                    padding: EdgeInsets.all(10.0),
-                    color: Colors.red[600],
-                    child: Text('length:',
-                      style: TextStyle(
-                        fontSize:20.0,
-                        fontWeight: FontWeight.bold,
-                      ) ,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex:1,
-                  child: Container(
-
-                    padding: EdgeInsets.all(10.0),
-                    //color: Colors.red[200],
-                    child:          new TextField(
-                      decoration: new InputDecoration(
-                          hintText: "length"
-                      ),
-                      onSubmitted: (String str){
-                        setState(() {
-                          result2 = str;
-                        });
-                        controller2.text="";
-                      },
-                      controller: controller2,
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
-          ),
-*/
         ],
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-         // Navigator.push(context, MaterialPageRoute(builder: (context) => output()));
-          //uploadText(result);
           if (object != "") {
             Navigator.pushNamed(context, '/automatic_crop');
             uploadLabel(object);
