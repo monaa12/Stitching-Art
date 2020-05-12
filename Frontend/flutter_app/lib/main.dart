@@ -346,11 +346,12 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigator.push(context, MaterialPageRoute(builder: (context) => output()));
+          if (object != "") {
+            Navigator.pushNamed(context, '/automatic_crop');
+            uploadLabel(object);
+          }
           Navigator.pushNamed(context, '/params');
           uploadFile(_selectedFile);
-          //uploadText(result);
-          // Navigator.pushNamed(context, '/automatic_crop');
-          // uploadLabel(object);
         },
         child: Icon(
             Icons.done
