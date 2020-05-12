@@ -41,8 +41,8 @@ def post_get_params():
     if request.method == "POST":
         # TODO:To be changed into width-->no_width_grids and height--> number_of_colors
         dim = request.json
-        globals.no_width_grids = dim['width']
-        globals.number_of_colors = dim['height']
+        globals.no_width_grids = int(dim['width'])
+        globals.number_of_colors = int(dim['height'])
         return jsonify(message="no_width_grids in server side=" + str(globals.no_width_grids))
     else:
         run.dimension(globals.no_width_grids)
