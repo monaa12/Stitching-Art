@@ -54,15 +54,23 @@ Future <void> uploadFile(filePath) async{
   }
 }
 
-void uploadStitches(number) async{
+void uploadStitches(number,numColors) async{
   try {
     // FormData formData = new FormData.from({
     //   "width": number
     // });
-    Response res = await Dio().post(
-        "http://10.0.2.2:5000/params", data: {"width": number, "height": 8});
-    print("value: $number");
-
+    Dio dio = new Dio();
+    //Response res = await Dio().post(
+    //    "http://10.0.2.2:5000/params", data: {"width": number, "height": 8});
+    //print("value: $number");
+    //List<Response> response = await Future.wait([dio.post("/info"), dio.get("/token")]);
+    List<Response> response = await Future.wait([dio.post("http://192.168.1.3:5000/params", data: {"width": number, "height": numColors}),
+      dio.get("http://192.168.1.3:5000/params")]);
+    print(response[1].data.toString());
+    double height=response[1].data["height"];
+    double width=response[1].data["width"];
+    print(height);
+    print(width);
     //Response res2 = await Dio().get("http://10.0.2.2:5000/params");
     //print(res2.data);
   }
