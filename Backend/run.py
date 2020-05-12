@@ -150,7 +150,7 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     show_chart: is taken value True or False to give option for user to show
                 the pie chart.
 
-    dmc_df: Dataframe of DMC colors (the jason file).
+    dmc_df: Dataframe of DMC colors (the json file).
 
 
     """
@@ -416,7 +416,7 @@ def distanceFromColor(idx, r, g, b, dmc_df):
 
     b: the value of blue color.
 
-    dmc_df: the dataframe of DMC colors (jason file) .
+    dmc_df: the dataframe of DMC colors (json file) .
 
     """
     tr = dmc_df.loc[idx]['r']
