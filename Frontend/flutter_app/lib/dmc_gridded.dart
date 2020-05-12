@@ -19,14 +19,7 @@ class _DMCGriddedState extends State<DMCGridded> {
   double download=0.0;
   File f;
   var imageUrl="http://127.0.0.1:5000/gridded_DMC";
-  Widget getImageWidget() {
-    if (f != null) {
-      return Image.network("http://192.168.1.102:5000/gridded");
-    } else {
-      //return Image.network("http://10.0.2.2:5000/pie_chart");
-      print("no");
-    }
-  }
+
   Future<void> downloadFile(imageUrl) async
   {
     try{
@@ -36,12 +29,7 @@ class _DMCGriddedState extends State<DMCGridded> {
       f=File("${dir.path}/$fileName");
       print(dir.path);
       print(f.path);
-      Response response=await dio.download(imageUrl, "${dir.path}/$fileName" /*"${dir.path}/gridedddd.png"*/,onReceiveProgress: (rec,total){
-        // GallerySaver.saveImage(f.path).then((bool success){
-        //   setState(() {
-        //    print('Image is saved');
-        //  });
-        //   });
+      Response response=await dio.download(imageUrl, "${dir.path}/$fileName" ,onReceiveProgress: (rec,total){
 
         setState(() {
           downloading=true;
@@ -54,12 +42,7 @@ class _DMCGriddedState extends State<DMCGridded> {
           downloadingStr="Completed";
         });
       });
-      // var filePath = await ImagePickerSaver.saveFile(
-      //      fileData: response.bodyBytes);
-      //await ImageGallerySaver.saveImage(imageUrl, albumName: "Abc");
-      //final result = await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
-      //print(result);
-      // await f.writeAsBytes(response.bodyBytes, flush: true);
+
     }catch(e)
     {
       print(e);
@@ -113,26 +96,9 @@ class _DMCGriddedState extends State<DMCGridded> {
         ),
 
       ),
-      //  Center(
-      //      child:getImageWidget(),
-      //  ),
-      /* Column(
-         // child: Center(
-            //child: Image.file(f,height: 600, width: 600,fit: BoxFit.cover),
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-          getImageWidget(),
-              //Image.file(f, height: 600, width: 600, fit: BoxFit.cover),
 
-    ],
-          ), */
-
-      //   ),
-      //da bta3 Center widget ),
       floatingActionButton:  FloatingActionButton(
         onPressed: () {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => Chart()));
           Navigator.pushNamed(context, '/dmc_pie_chart');
         },
         child: Icon(
