@@ -82,9 +82,9 @@ def crop_object(im_pil, bbox, labels, gb_label):
     ---------
     im_pil: PIL image .
 
-    bbox: .
+    bbox: output from objrct detection fn ,box the is drawn around the object want to be cropped.
 
-    labels: .
+    labels:the name of the object the user entered to be cropped .
 
     gb_label: .
 
@@ -468,10 +468,3 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
 
     return dmc_i, dmc_r, dmc_g, dmc_b, hex_i
 
-# json_file_path = "./rgb-dmc.json"
-# test conversion
-# dmc_df = conversion_dmc(json_file_path)
-# im_np = cv2.imread('D:/4th year computer/SECOND TERM/image processing/project/minion.jpg')
-# get_colors(im_np, 8, True, dmc_df)
-# image_input = Image.open(r'C:\Users\Esraa\Music\OS_gui\implementation\UPLOAD_FOLDER\minion.jpg')
-# grided_image(image_input,70)
