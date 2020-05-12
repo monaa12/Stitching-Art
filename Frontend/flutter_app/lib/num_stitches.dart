@@ -76,7 +76,7 @@ class _outputState extends State<output> {
                     ),
                   ),
                 ),
-                ////henaaaa ya haiodaaa
+               
               Expanded(
                 flex:1,
                 child: Container(
@@ -158,22 +158,7 @@ class _outputState extends State<output> {
               dim= uploadStitches(res,result);
                // _showOptions(context);
               }),
-          MaterialButton(
-              color: Colors.deepOrange,
-              child: Icon(
-                  Icons.add_a_photo
-              ),
-              //  child: Text(
-
-              //  "Device",
-              // style: TextStyle(color: Colors.white),
-              //),
-              onPressed: () {
-
-                dim= uploadStitches(res,result);
-              }
-          ),
-
+          
           Expanded(
             flex:1,
             child: Row(
