@@ -117,7 +117,7 @@ def RGB2HEX(color):
 
     Parameters
     ---------
-    color:  .
+    color: rgb code   .
 
     """
     return "#{:02x}{:02x}{:02x}".format(int(round(color[0])), int(round(color[1])), int(round(color[2])))
@@ -128,7 +128,7 @@ def HEX2RGB(color):
 
     Parameters
     ---------
-    color:  .
+    color: hex value of the color .
 
 
     """
