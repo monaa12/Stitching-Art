@@ -15,7 +15,24 @@ class _ChartState extends State<Chart> {
   String downloadingStr="No data";
   double download=0.0;
   File f;
-  var imageUrl="http://10.0.2.2:5000/pie_chart";
+  var imageUrl="http://127.0.0.1:5000/pie_chart";
+  Widget getImageWidget() {
+    if (f != null) {
+      return Image.file(
+        f,
+       // width: 500,
+       // height: 500,
+        //fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        "assets/loading.jpg",
+       // width: 500,
+       // height: 500,
+       // fit: BoxFit.cover,
+      );
+    }
+  }
   Future<void> downloadPieChart(imageUrl) async
   {
     try{
@@ -43,6 +60,7 @@ class _ChartState extends State<Chart> {
   @override
   void initState() {
     super.initState();
+ //   Image.network("http://10.0.2.2:5000/pie_chart");
     downloadPieChart(imageUrl);
 
   }
@@ -60,7 +78,23 @@ class _ChartState extends State<Chart> {
         centerTitle: true ,
         backgroundColor: Colors.red[700],
       ),
-      body: Center(
+      body:
+     // Center(
+     //     child:getImageWidget(),
+      //),
+      /*Column(
+        // child: Center(
+        //child: Image.file(f,height: 600, width: 600,fit: BoxFit.cover),
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          getImageWidget(),
+          //Image.file(f, height: 600, width: 600, fit: BoxFit.cover),
+
+        ],
+      ),
+     */
+      Center(
         child: downloading?Container(
           height: 250,
           width: 250,
@@ -76,15 +110,18 @@ class _ChartState extends State<Chart> {
             ),
           ),
         ):Container(
-          child: Center(
-            child: Image.file(f,height: 600, width: 600,),
+          child:
+          Center(
+            child: Image.file(f,height: 650, width: 650,),
+
           ),
         ),
       ),
+
       floatingActionButton:  FloatingActionButton(
         onPressed: () {
             //Navigator.push(context, MaterialPageRoute(builder: (context) => Chart()));
-            Navigator.pushNamed(context, '/dmc_pie_chart');
+            Navigator.pushNamed(context, '/gridded_DMC');
         },
         child: Icon(
             Icons.navigate_next
