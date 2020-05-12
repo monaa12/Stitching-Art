@@ -146,13 +146,12 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     ---------
     image: PIL image .
 
-    number_of_colors: the number of colors is entered by user to convert the colors of image
-                       to this specific colors .
+    number_of_colors: the number of colors the user wants the image to be converted to.
 
     show_chart: is taken value True or False to give option for user to show
                 the pie chart.
 
-    dmc_df: Dataframe of DMC colors.
+    dmc_df: Dataframe of DMC colors (the jason file).
 
 
     """
@@ -180,7 +179,8 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     dmc_colors_rgb = []
     pie_dmc = []
     sorted_counts = list(counts.values())
-
+    
+    #
     for i in range(len(hex_colors)):
         r = int(round(rgb_colors[i][0]))
         g = int(round(rgb_colors[i][1]))
@@ -399,22 +399,23 @@ def distanceFromColor(idx, r, g, b, dmc_df):
 
     Parameters
     ---------
-    idx: the id of any color which is founded in dataframe .
+    idx: the id of the color in the dataframe .
 
-    r: the value od red color.
+    r: the value of red color.
 
     g: the value of green color.
 
     b: the value of blue color.
 
-    dmc_df: the dataframe of DMC colors .
+    dmc_df: the dataframe of DMC colors (jason file) .
 
 
     """
     tr = dmc_df.loc[idx]['r']
     tg = dmc_df.loc[idx]['g']
     tb = dmc_df.loc[idx]['b']
-
+    
+    #calculating the shortest distance between the color presented in the image with all the colors in the dataframe in order to get the closest color
     base_distance = ((r - tr) * (r - tr)) + ((g - tg) * (g - tg)) + ((b - tb) * (b - tb))
     distance = math.sqrt(base_distance)
     return distance
@@ -449,10 +450,10 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
             hex_i = dmc_df.loc[idx]['hex']
             return dmc_i, dmc_r, dmc_g, dmc_b, hex_i
 
-    # sort the list in ascending order
+    # sort the list in ascending order in order to take the shortest distance which is th closest color
     distance_list.sort()
 
-    # Get the values that are closest to the RGB value from first row of {distance_list} and idx column
+    # Get the values that are closest to the RGB value from first row of {distance_list} and idx column and search in the dataframe to get the color
     # (which is the same id in data frame of dmc colors{dmc_df})
     dmc_i = dmc_df.loc[distance_list[0][1]]['floss']
     dmc_r = dmc_df.loc[distance_list[0][1]]['r']
