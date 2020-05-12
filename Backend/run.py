@@ -19,18 +19,41 @@ import math
 
 # conversion of dmc
 def conversion_dmc(json_file_path):
+    """  Read json file using pandas  .
+
+    Parameters
+    ---------
+    json_file_path: the path of json file  .
+
+    """
     df = pd.read_json(json_file_path)
     return df
 
 
 # get the image from frontend
 def get_image(image_path):
+    """  Get the image and read it using CV2 and convert it to RGB .
+
+    Parameters
+    ---------
+    image_path: the path of the image .
+
+
+    """
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
 
 def object_detection(image_path):
+    """  Detect the specific object from the image  .
+
+    Parameters
+    ---------
+    image_path: the path of the image  .
+
+    """
+
     im = cv2.imread(image_path)
     bbox, labels, conf = cv.detect_common_objects(im, enable_gpu=True)
     # print(bbox[0][0], labels)
@@ -53,6 +76,21 @@ def object_detection(image_path):
 
 
 def crop_object(im_pil, bbox, labels, gb_label):
+    """ Crop specific object from the image     .
+
+    Parameters
+    ---------
+    im_pil: PIL image .
+
+    bbox: .
+
+    labels: .
+
+    gb_label: .
+
+
+    """
+
     # Setting the points for cropped image
     # l = input("please enter the required object: ")
     i = 0
@@ -75,15 +113,49 @@ def crop_object(im_pil, bbox, labels, gb_label):
 
 
 def RGB2HEX(color):
+    """ Convert RGB values to HEX   .
+
+    Parameters
+    ---------
+    color:  .
+
+    """
     return "#{:02x}{:02x}{:02x}".format(int(round(color[0])), int(round(color[1])), int(round(color[2])))
 
 
 def HEX2RGB(color):
+    """ Convert HEX values to RGB values   .
+
+    Parameters
+    ---------
+    color:  .
+
+
+    """
+
     h = color.lstrip('#')
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
 def get_colors(image, number_of_colors, show_chart, dmc_df):
+    """  Display the 2 pie charts (one for the original color of the image after pixelation and one for DMC color)
+         ,Count  number of skeins are needed for each color and  Display the gridded image by specific number
+          of colors and DMC colors.
+
+    Parameters
+    ---------
+    image: PIL image .
+
+    number_of_colors: the number of colors is entered by user to convert the colors of image
+                       to this specific colors .
+
+    show_chart: is taken value True or False to give option for user to show
+                the pie chart.
+
+    dmc_df: Dataframe of DMC colors.
+
+
+    """
 
     # Start by pixelating the input images
     image = pixelate(image, globals.no_width_grids)
@@ -299,6 +371,10 @@ def dimension(no_width_grids):
 
 
 def init_app():
+    """    .
+
+    """
+
     json_file_path = "./rgb-dmc.json"
     dmc_df = conversion_dmc(json_file_path)
     image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
@@ -319,6 +395,22 @@ def init_app():
 
 
 def distanceFromColor(idx, r, g, b, dmc_df):
+    """ Calculate the distance between r,g,b and the colors in the dataframe  .
+
+    Parameters
+    ---------
+    idx: the id of any color which is founded in dataframe .
+
+    r: the value od red color.
+
+    g: the value of green color.
+
+    b: the value of blue color.
+
+    dmc_df: the dataframe of DMC colors .
+
+
+    """
     tr = dmc_df.loc[idx]['r']
     tg = dmc_df.loc[idx]['g']
     tb = dmc_df.loc[idx]['b']
@@ -329,6 +421,20 @@ def distanceFromColor(idx, r, g, b, dmc_df):
 
 
 def matchDMC(redVal, greenVal, blueVal, dmc_df):
+    """  Match DMC color with the color of image  .
+
+    Parameters
+    ---------
+    redVal:the value of red color  .
+
+    greenVal: the value of green color.
+
+    blueVal: the value of blue color.
+
+    dmc_df: Dataframe of DMC colors .
+
+
+    """
     distance_list = []
 
     for idx in range(len(dmc_df)):
