@@ -371,7 +371,7 @@ def dimension(no_width_grids):
 
 
 def init_app():
-    """    .
+    """  the function is used for mobile app  .
 
     """
 
