@@ -152,7 +152,7 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     show_chart: is taken value True or False to give option for user to show
                 the pie chart.
 
-    dmc_df: .
+    dmc_df: Dataframe of DMC colors.
 
 
     """
@@ -395,19 +395,19 @@ def init_app():
 
 
 def distanceFromColor(idx, r, g, b, dmc_df):
-    """     .
+    """ Calculate the distance between r,g,b and the colors in the dataframe  .
 
     Parameters
     ---------
-    idx:  .
+    idx: the id of any color which is founded in dataframe .
 
-    r: .
+    r: the value od red color.
 
-    g: .
+    g: the value of green color.
 
-    b: .
+    b: the value of blue color.
 
-    dmc_df: .
+    dmc_df: the dataframe of DMC colors .
 
 
     """
@@ -431,7 +431,7 @@ def matchDMC(redVal, greenVal, blueVal, dmc_df):
 
     blueVal: the value of blue color.
 
-    dmc_df: .
+    dmc_df: Dataframe of DMC colors .
 
 
     """
