@@ -84,15 +84,17 @@ def HEX2RGB(color):
 
 
 def get_colors(image, number_of_colors, show_chart, dmc_df):
-    image = pixelate(image,globals.no_width_grids)
+
+    # Start by pixelating the input images
+    image = pixelate(image, globals.no_width_grids)
 
     # trying to get pixel_size
     pixel_size = int(image.size[0] / globals.no_width_grids)
     image = np.asarray(image)
-
     modified_image = image.reshape(image.shape[0] * image.shape[1], 3)
 
-    clf = KMeans(n_clusters=number_of_colors)
+    # Start the K-means algorithm to identify all colors into certain number_of_colors given by the user
+    clf = KMeans(n_clusters=number_of_colors, n_init=20)
     labels = clf.fit_predict(modified_image)
     counts = Counter(labels)
     center_colors = clf.cluster_centers_
@@ -105,7 +107,6 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
     dmc_colors_hex_labels = []
     dmc_colors_rgb = []
     pie_dmc = []
-
     sorted_counts = list(counts.values())
 
     for i in range(len(hex_colors)):
@@ -123,12 +124,12 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
         pie_dmc.append([dmc_colors_codes[i], list_skeins])
 
     # conversion the color of input_image to the specific no.of colors entered by user
-    result = image.reshape(-1, 3)
-
     (h, w) = image.shape[:2]
 
+    # create the new image with DMC colors
     new_image = []
 
+    # looping on each pixel and convert it to DMC color
     for i in range(len(labels)):
         label_color = labels[i]
         r = int(round(dmc_colors_rgb[label_color][0]))
@@ -136,24 +137,18 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
         b = int(round(dmc_colors_rgb[label_color][2]))
         new_image.append([r, g, b])
 
-    #
     new = np.reshape(new_image, (h, w, 3))
 
     # convert the image from np.array to PIL.Image
     img = Image.fromarray(new.astype(np.uint8))
 
-    # plotting image after conversion its color
-    plt.figure(figsize=(10, 15))
-    plt.imshow(img)
-
-    # converting to gridde_image
+    # converting to gridded_image
     grided_image(img, globals.no_width_grids, 1)
-    ########
 
     if show_chart:
+
         # pie_chart_with_hex_values
         plt.figure(figsize=(12, 10))
-        # plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
         plt.pie(counts.values(), colors=hex_colors, autopct='%1.1f%%')
         plt.title("Original pie chart")
         plt.legend(labels=hex_colors, bbox_to_anchor=(0.85, 1.025), loc='upper left', fontsize=13)
@@ -163,15 +158,13 @@ def get_colors(image, number_of_colors, show_chart, dmc_df):
 
         # dmc_pie_chart_with_number_of_skeins
         plt.figure(figsize=(12, 10))
-        # plt.pie(counts.values(), labels=dmc_colors_codes, colors=dmc_colors_hex_labels)
-        # plt.pie(counts.values(), labels=pie_dmc, colors=dmc_colors_hex_labels)
         plt.pie(counts.values(), colors=dmc_colors_hex_labels, autopct='%1.1f%%')
         plt.title("DMC pie chart")
         plt.legend(labels=pie_dmc, bbox_to_anchor=(0.85, 1.025),  loc='upper left', fontsize=13)
         plt.subplots_adjust(left=0.1, bottom=0.1, right=0.81)
         plt.tight_layout()
         plt.savefig(os.path.join(globals.app.static_folder, "dmc_pie_chart.png"))
-    return rgb_colors
+    return ""
 
 
 def pixelate(input_image, no_width_grids):
@@ -269,21 +262,25 @@ def grided_image(input_image, no_width_grids, flag=0):
         grided = cv2.line(grided, start_point_row, end_point_row, color, thickness)
 
     # plotting the gridded image
-    plt.figure(figsize=(30, 30))
-    plt.imshow(grided)
-    plt.savefig(os.path.join(globals.app.static_folder, "gridded.png"))
+    if flag == 1:
+        plt.figure(figsize=(30, 30))
+        plt.imshow(grided)
+        plt.savefig(os.path.join(globals.app.static_folder, "gridded_DMC.png"))
+    else:
+        plt.figure(figsize=(30, 30))
+        plt.imshow(grided)
+        plt.savefig(os.path.join(globals.app.static_folder, "gridded.png"))
 
 
 def dimension(no_width_grids):
     """Give the dimension of gridded image by cm .
 
-    Parameters
-    ---------
-    no_width_grids: number of stitches of the width .
+       Parameters
+       ---------
+       no_width_grids: number of stitches of the width .
 
 
-    """
-
+       """
     image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
     image_input = Image.open(image_path)
 
@@ -310,13 +307,13 @@ def init_app():
         im_pil, bbox, labels = object_detection(image_path)
         im_np, im_pil = crop_object(im_pil, bbox, labels, globals.label)
         get_colors(im_pil, globals.number_of_colors, True, dmc_df)
-        grided_image(im_pil, globals.no_width_grids)
+        grided_image(im_pil, globals.no_width_grids, 0)
+        globals.obj_flag = False
 
     else:
-        # im_np = get_image(image_path)
         image_input = Image.open(image_path)
         get_colors(image_input, globals.number_of_colors, True, dmc_df)
-        grided_image(image_input, globals.no_width_grids)
+        grided_image(image_input, globals.no_width_grids, 0)
 
     return ""
 
