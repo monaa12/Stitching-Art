@@ -19,18 +19,41 @@ import math
 
 # conversion of dmc
 def conversion_dmc(json_file_path):
+    """    .
+
+    Parameters
+    ---------
+    json_file_path:  .
+
+    """
     df = pd.read_json(json_file_path)
     return df
 
 
 # get the image from frontend
 def get_image(image_path):
+    """     .
+
+    Parameters
+    ---------
+    image_path:  .
+
+
+    """
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
 
 def object_detection(image_path):
+    """      .
+
+    Parameters
+    ---------
+    image_path:  .
+
+    """
+
     im = cv2.imread(image_path)
     bbox, labels, conf = cv.detect_common_objects(im, enable_gpu=True)
     # print(bbox[0][0], labels)
@@ -53,6 +76,21 @@ def object_detection(image_path):
 
 
 def crop_object(im_pil, bbox, labels, gb_label):
+    """     .
+
+    Parameters
+    ---------
+    im_pil:  .
+
+    bbox: .
+
+    labels: .
+
+    gb_label: .
+
+
+    """
+
     # Setting the points for cropped image
     # l = input("please enter the required object: ")
     i = 0
@@ -75,15 +113,46 @@ def crop_object(im_pil, bbox, labels, gb_label):
 
 
 def RGB2HEX(color):
+    """    .
+
+    Parameters
+    ---------
+    color:  .
+
+    """
     return "#{:02x}{:02x}{:02x}".format(int(round(color[0])), int(round(color[1])), int(round(color[2])))
 
 
 def HEX2RGB(color):
+    """    .
+
+    Parameters
+    ---------
+    color:  .
+
+
+    """
+
+
     h = color.lstrip('#')
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
 def get_colors(image, number_of_colors, show_chart, dmc_df):
+    """     .
+
+    Parameters
+    ---------
+    image:  .
+
+    number_of_colors: .
+
+    show_chart: .
+
+    dmc_df: .
+
+
+    """
 
     # Start by pixelating the input images
     image = pixelate(image, globals.no_width_grids)
@@ -299,6 +368,10 @@ def dimension(no_width_grids):
 
 
 def init_app():
+    """    .
+
+    """
+
     json_file_path = "./rgb-dmc.json"
     dmc_df = conversion_dmc(json_file_path)
     image_path = os.path.join(globals.app.config['UPLOAD_FOLDER'], globals.photo.filename)
@@ -319,6 +392,22 @@ def init_app():
 
 
 def distanceFromColor(idx, r, g, b, dmc_df):
+    """     .
+
+    Parameters
+    ---------
+    idx:  .
+
+    r: .
+
+    g: .
+
+    b: .
+
+    dmc_df: .
+
+
+    """
     tr = dmc_df.loc[idx]['r']
     tg = dmc_df.loc[idx]['g']
     tb = dmc_df.loc[idx]['b']
@@ -329,6 +418,20 @@ def distanceFromColor(idx, r, g, b, dmc_df):
 
 
 def matchDMC(redVal, greenVal, blueVal, dmc_df):
+    """    .
+
+    Parameters
+    ---------
+    redVal:  .
+
+    greenVal: .
+
+    blueVal: .
+
+    dmc_df: .
+
+
+    """
     distance_list = []
 
     for idx in range(len(dmc_df)):
