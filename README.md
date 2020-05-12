@@ -39,17 +39,7 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 
 ## How to use?
 
-
-
-*This is the interface of the application , you capture the wanted picture and then click the right button*
-
-
-
-
-
-*you need to enter those two parameters*
-
-
+this is a [video](https://drive.google.com/file/d/1oFYRZFWxnhhR-bxyOT0lZSjZvY3NCDlc/view?usp=sharing) showing how to use the application
 
 ---
 ## Examples
