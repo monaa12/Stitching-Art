@@ -43,16 +43,16 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ### 4) Desgining details
 - The user will get the design divided into four main sections
     *  Two gridded images 
-      * One with original colors  
-      * One with matched DMC colors
+      ** One with original colors  
+      ** One with matched DMC colors
     * Note: The first image will be colored with the closest match according to the number of colors enterd by the user and then DMC colors will be chosen based on it 
     * Two pie Charts with percentages and legends
-      * One with original colors, it's legend will list the colors in hex
-      * One with matched DMC colors, it's legend will list the dmc color CODES and the number of skeins 
+      ** One with original colors, it's legend will list the colors in hex
+      ** One with matched DMC colors, it's legend will list the dmc color CODES and the number of skeins 
     * The number of Skeins
-      * Based on matched colors and the percentages provided in the pie chart, the app will compute the number of skeins for each color and list them   in the legend
+      ** Based on matched colors and the percentages provided in the pie chart, the app will compute the number of skeins for each color          and list them in the legend
     * The real dimensions of the design in cm
-      * Based on the number of stitches in width entered by the user, the app will compute the required width and height for the design         in cm and plot it as a subtitle below the pie charts  
+      ** Based on the number of stitches in width entered by the user, the app will compute the required width and height for the design          in cm and plot it as a subtitle below the pie charts  
 
 ---
 
