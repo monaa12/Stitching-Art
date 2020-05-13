@@ -39,37 +39,29 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ---
 
 ## How to use?
+### 1) Download this repo
+- From GitHub: Clone or Download the repository or
+- From Git:
+    > git clone https://github.com/monaa12/Stitching-Art.git
+    
+### 2) Frontend launching:   
+  - Download flutter , android studio and git.
+  
+  - Run in flutter terminal in projecr directory the following command--> flutter packages git.  
+  
+  - Choose suitable emulator or use physical mobile device.
 
-this is a [video](https://drive.google.com/file/d/1oFYRZFWxnhhR-bxyOT0lZSjZvY3NCDlc/view?usp=sharing) showing how to use the application
-
----
-## Examples
-
-*for example :*
-*Number of stitches of width = 60*
-*Number of image colors = 4*
-
-
-
-
-*Gridded orignal picture*
-
-
-
-
-
-*pie chart of the original picture with color codes*
-
-
-
-
-*Converted picture with DMC colors*
-
-
-
-*Pie chart of the converted picture with the DMC codes*
-
-
+### 3) Flask launching:
+   Run the following commands
+   
+   - pip install -r requirements.txt
+   
+   - set FLASK_APP= api.py
+   
+   - set FLASK_DEBUG= false
+   
+   - flask run
+    
 
 
 ---
