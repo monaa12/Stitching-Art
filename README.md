@@ -47,20 +47,20 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 ### 2) Frontend launching:   
   - Download flutter , android studio and git.
   
-  - Run in flutter terminal in projecr directory the following command--> flutter packages git.  
+  - Run in flutter terminal in project directory the following command--> flutter packages git.  
   
   - Choose suitable emulator or use physical mobile device.
 
 ### 3) Flask launching:
    Run the following commands
    
-   - pip install -r requirements.txt
+   - Pip install -r requirements.txt
    
-   - set FLASK_APP= api.py
+   - Set FLASK_APP= api.py
    
-   - set FLASK_DEBUG= false
+   - Set FLASK_DEBUG= false
    
-   - flask run
+   - Flask run
     
 
 
