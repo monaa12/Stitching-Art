@@ -1,4 +1,7 @@
-![cover](https://user-images.githubusercontent.com/36296119/81631574-701fc180-9408-11ea-802f-159cab2598cc.png)
+
+<p align="center">
+  <img width="600" height="200" src="https://user-images.githubusercontent.com/36296119/81631574-701fc180-9408-11ea-802f-159cab2598cc.png">
+</p>
 
 
 
@@ -37,18 +40,18 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
     * automatic cropping through object detection and the user just enter a label for the target object  
 ### 3) Gridded pattern complexity
 - The user can determine the complexity level by
-    * Entering the number of stitches in width 
-    * Entering the number of colors required where all the colors in the image will be matched to 
-- Note: Choosing large number of stitches and/or large number of colors means greater complexity 
-### 4) Desgining details
+    * Entering the number of stitches in width
+    * Entering the number of colors required where all the colors in the image will be matched to
+- Note: Choosing large number of stitches and/or large number of colors means greater complexity
+### 4) Designing details
 - The user will get the design divided into four main sections
     *  Two gridded images
-         * One with original colors 
-         * One with matched DMC colors 
- 
+         * One with original colors
+         * One with matched DMC colors
+
     * Two pie Charts with percentages and legends
       * One with original colors, it's legend will list the colors in hex
-      * One with matched DMC colors, it's legend will list the dmc color CODES and the number of skeins 
+      * One with matched DMC colors, it's legend will list the dmc color CODES and the number of skeins
       * Note: The first pie chart will be colored with the closest matching according to the number of colors enterd by the user and   then DMC colors will be chosen based on it
     * The number of Skeins
       * Based on matched colors and the percentages provided in the pie chart, the app will compute the number of skeins for each color          and list them in the legend
