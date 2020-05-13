@@ -96,7 +96,7 @@ Cross stitch is a relaxing and rewarding craft.Most cross-stitchers tend to foll
 
 ---
 
-## Our Team
+## Team members
 - [Mona Mahmoud Abdelhafez](https://github.com/monaa12)
 - [Menna Tullah Hussein Ali](https://github.com/menna-hussien)
 - [Esraa Mohsen Salah](https://github.com/Esraa1moshsen)
